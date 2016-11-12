@@ -1,18 +1,11 @@
 package jadx.gui.settings;
 
 import jadx.cli.JadxCLIArgs;
-
-import java.awt.Font;
-import java.awt.Window;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class JadxSettings extends JadxCLIArgs {
 
@@ -29,6 +22,7 @@ public class JadxSettings extends JadxCLIArgs {
 	private String lastSaveFilePath = USER_HOME;
 	private boolean flattenPackage = false;
 	private boolean checkForUpdates = true;
+	private boolean moreResults = false;
 	private List<String> recentFiles = new ArrayList<String>();
 	private String fontStr = "";
 	private boolean autoStartJobs = true;
@@ -67,6 +61,15 @@ public class JadxSettings extends JadxCLIArgs {
 
 	public void setFlattenPackage(boolean flattenPackage) {
 		this.flattenPackage = flattenPackage;
+		sync();
+	}
+
+	public boolean isMoreResults() {
+		return checkForUpdates;
+	}
+
+	public void setMoreResults(boolean moreResults) {
+		this.moreResults = moreResults;
 		sync();
 	}
 

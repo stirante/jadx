@@ -11,21 +11,13 @@ import jadx.core.dex.nodes.ClassNode;
 import jadx.core.dex.nodes.DexNode;
 import jadx.core.dex.nodes.FieldNode;
 import jadx.core.dex.nodes.MethodNode;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.*;
 
 public class Deobfuscator {
 	private static final Logger LOG = LoggerFactory.getLogger(Deobfuscator.class);
@@ -145,7 +137,7 @@ public class Deobfuscator {
 
 	@Nullable
 	private static ClassNode resolveOverridingInternal(DexNode dex, ClassNode cls, String signature,
-			Set<MethodInfo> overrideSet, ClassNode rootClass) {
+													   Set<MethodInfo> overrideSet, ClassNode rootClass) {
 		ClassNode result = null;
 
 		for (MethodNode m : cls.getMethods()) {
@@ -352,7 +344,7 @@ public class Deobfuscator {
 
 		if (alias == null) {
 			String clsName = classInfo.getShortName();
-			alias = String.format("C%04d%s", clsIndex++, makeName(clsName));
+			alias = makeName(clsName);
 		}
 		PackageNode pkg = getPackageNode(classInfo.getPackage(), true);
 		clsMap.put(classInfo, new DeobfClsInfo(this, cls, pkg, alias));
@@ -450,9 +442,7 @@ public class Deobfuscator {
 	}
 
 	private boolean shouldRename(String s) {
-		return s.length() > maxLength
-				|| s.length() < minLength
-				|| NameMapper.isReserved(s)
+		return NameMapper.isReserved(s)
 				|| !NameMapper.isAllCharsPrintable(s);
 	}
 
