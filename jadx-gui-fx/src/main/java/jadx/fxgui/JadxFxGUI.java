@@ -355,6 +355,7 @@ public class JadxFxGUI extends Application {
             primaryStage.setScene(scene);
             primaryStage.setTitle("Jadx GUI");
             primaryStage.show();
+            openTab(new DummyXmlNode());
             openTab(new DummyJavaNode());
         } catch (IOException e) {
             e.printStackTrace();
@@ -363,12 +364,12 @@ public class JadxFxGUI extends Application {
 
     public void openTab(JNode node) {
         CodeView tab = new CodeView(node);
-//        if (!tabs.getTabs().contains(tab)) {
-        tabs.getTabs().add(tab);
-        tabs.getSelectionModel().select(tab);
-//        } else {
-//            tabs.getSelectionModel().select(tab);
-//        }
+        if (!tabs.getTabs().contains(tab)) {
+            tabs.getTabs().add(tab);
+            tabs.getSelectionModel().select(tab);
+        } else {
+            tabs.getSelectionModel().select(tab);
+        }
     }
 
     public class DummyJavaNode extends JNode {

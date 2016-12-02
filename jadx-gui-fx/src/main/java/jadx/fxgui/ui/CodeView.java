@@ -25,12 +25,13 @@ public class CodeView extends Tab {
     private JNode node;
 
     public CodeView(JNode node) {
+        this.node = node;
         syntax = BaseSyntax.getFor(node.getSyntaxName());
         codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.richChanges()
                 .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-                .subscribe(change -> codeArea.setStyleSpans(0, syntax.computeHighlighting(codeArea.getText())));
+                .subscribe(change -> syntax.computeHighlighting(codeArea));
         codeArea.replaceText(0, 0, node.getContent());
         codeArea.setEditable(false);
         FXMLLoader loader = new FXMLLoader(CodeView.class.getResource("/Tab.fxml"));
@@ -46,19 +47,19 @@ public class CodeView extends Tab {
         setText(node.getName());
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        CodeView codeView = (CodeView) o;
-//
-//        return node != null ? node.equals(codeView.node) : codeView.node == null;
-//
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return node != null ? node.hashCode() : 0;
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CodeView codeView = (CodeView) o;
+
+        return node != null && node.equals(codeView.node);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return node != null ? node.hashCode() : 0;
+    }
 }

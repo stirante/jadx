@@ -1,8 +1,6 @@
 package jadx.fxgui.utils.syntax;
 
-import org.fxmisc.richtext.model.StyleSpans;
-
-import java.util.Collection;
+import org.fxmisc.richtext.CodeArea;
 
 /**
  * Created by stirante
@@ -21,6 +19,6 @@ public abstract class BaseSyntax {
         }
     }
 
-    public abstract StyleSpans<Collection<String>> computeHighlighting(String text);
+    public abstract void computeHighlighting(CodeArea text);
 
 }

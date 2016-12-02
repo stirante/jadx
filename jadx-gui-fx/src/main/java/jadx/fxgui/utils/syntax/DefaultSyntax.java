@@ -1,6 +1,6 @@
 package jadx.fxgui.utils.syntax;
 
-import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.Collection;
@@ -14,7 +14,7 @@ public class DefaultSyntax extends BaseSyntax {
     static final BaseSyntax instance = new DefaultSyntax();
 
     @Override
-    public StyleSpans<Collection<String>> computeHighlighting(String text) {
-        return new StyleSpansBuilder<Collection<String>>().add(Collections.emptyList(), text.length()).create();
+    public void computeHighlighting(CodeArea text) {
+        text.setStyleSpans(0, new StyleSpansBuilder<Collection<String>>().add(Collections.emptyList(), text.getText().length()).create());
     }
 }
