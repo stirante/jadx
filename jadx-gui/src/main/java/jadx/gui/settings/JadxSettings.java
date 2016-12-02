@@ -65,7 +65,7 @@ public class JadxSettings extends JadxCLIArgs {
 	}
 
 	public boolean isMoreResults() {
-		return checkForUpdates;
+		return moreResults;
 	}
 
 	public void setMoreResults(boolean moreResults) {
