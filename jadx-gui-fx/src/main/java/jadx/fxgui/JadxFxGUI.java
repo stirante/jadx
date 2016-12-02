@@ -1,19 +1,31 @@
 package jadx.fxgui;
 
+import jadx.fxgui.jobs.BackgroundWorker;
+import jadx.fxgui.jobs.DecompileJob;
+import jadx.fxgui.jobs.IndexJob;
+import jadx.fxgui.settings.JadxSettings;
+import jadx.fxgui.settings.JadxSettingsAdapter;
 import jadx.fxgui.treemodel.JClass;
 import jadx.fxgui.treemodel.JNode;
+import jadx.fxgui.treemodel.JRoot;
 import jadx.fxgui.ui.CodeView;
+import jadx.fxgui.utils.CacheObject;
+import jadx.fxgui.utils.LogCollector;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class JadxFxGUI extends Application {
 
@@ -335,10 +347,23 @@ public class JadxFxGUI extends Application {
             "    </application>\n" +
             "\n" +
             "</manifest>\n";
+
+    private static final String DEFAULT_TITLE = "JADX-FxGUI";
     @FXML
-    public TreeView<JNode> fileTree;
+    public TreeView<String> fileTree;
     @FXML
     public TabPane tabs;
+    @FXML
+    public ProgressBar progress;
+    @FXML
+    public Label statusText;
+    @FXML
+    public HBox pbox;
+    private JadxWrapper wrapper;
+    private JadxSettings settings;
+    private CacheObject cacheObject;
+    private Stage stage;
+    private BackgroundWorker backgroundWorker;
 
     public static void main(String[] args) {
         launch(args);
@@ -346,6 +371,15 @@ public class JadxFxGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        LogCollector.register();
+        final JadxSettings jadxArgs = JadxSettingsAdapter.load();
+        if (!jadxArgs.processArgs(getParameters().getRaw().toArray(new String[getParameters().getRaw().size()]))) {
+            return;
+        }
+        this.wrapper = new JadxWrapper(jadxArgs);
+        this.settings = jadxArgs;
+        this.cacheObject = new CacheObject();
+        resetCache();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(JadxFxGUI.class.getResource("/MainWindow.fxml"));
             fxmlLoader.setController(this);
@@ -353,13 +387,80 @@ public class JadxFxGUI extends Application {
             Scene scene = new Scene(node, 1280, 720);
             scene.getStylesheets().add(JadxFxGUI.class.getResource("/style.css").toExternalForm());
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Jadx GUI");
+            primaryStage.setTitle(DEFAULT_TITLE);
+            primaryStage.setOnCloseRequest(event -> cancelBackgroundJobs());
+            pbox.prefWidthProperty().bind(fileTree.widthProperty());
+            progress.prefWidthProperty().bind(fileTree.widthProperty());
+            fileTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            fileTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                System.out.println(newValue.getClass().toString());
+            });
             primaryStage.show();
-            openTab(new DummyXmlNode());
-            openTab(new DummyJavaNode());
+            stage = primaryStage;
+            if (settings.getInput().isEmpty()) {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open file");
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("APK file", "*.apk"),
+                        new FileChooser.ExtensionFilter("DEX file", "*.dex"),
+                        new FileChooser.ExtensionFilter("ZIP file", "*.zip"),
+                        new FileChooser.ExtensionFilter("AAR file", "*.aar"),
+                        new FileChooser.ExtensionFilter("JAR file", "*.jar"),
+                        new FileChooser.ExtensionFilter("Class file", "*.class"),
+                        new FileChooser.ExtensionFilter("All files", "*.*")
+                );
+                File f = fileChooser.showOpenDialog(primaryStage);
+                openFile(f);
+            } else {
+                openFile(settings.getInput().get(0));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void openFile(File f) {
+        tabs.getTabs().clear();
+        resetCache();
+        wrapper.openFile(f);
+        stage.setTitle(DEFAULT_TITLE + " - " + f.getName());
+        settings.addRecentFile(f.getAbsolutePath());
+        buildTree();
+        runBackgroundJobs();
+    }
+
+    public void buildTree() {
+        JRoot treeRoot = new JRoot(wrapper);
+        treeRoot.setFlatPackages(settings.isFlattenPackage());
+        fileTree.setRoot(treeRoot);
+    }
+
+    private synchronized void runBackgroundJobs() {
+        cancelBackgroundJobs();
+        backgroundWorker = new BackgroundWorker(cacheObject, this);
+        if (settings.isAutoStartJobs()) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    backgroundWorker.exec();
+                }
+            }, 1000);
+        }
+    }
+
+    public synchronized void cancelBackgroundJobs() {
+        if (backgroundWorker != null) {
+            backgroundWorker.stop();
+            backgroundWorker = new BackgroundWorker(cacheObject, this);
+            resetCache();
+        }
+    }
+
+    protected void resetCache() {
+        cacheObject.reset();
+        int threadsCount = 1;
+        cacheObject.setDecompileJob(new DecompileJob(wrapper, threadsCount));
+        cacheObject.setIndexJob(new IndexJob(wrapper, cacheObject, threadsCount));
     }
 
     public void openTab(JNode node) {

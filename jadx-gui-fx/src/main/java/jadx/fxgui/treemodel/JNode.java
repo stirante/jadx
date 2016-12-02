@@ -2,10 +2,27 @@ package jadx.fxgui.treemodel;
 
 import jadx.api.JavaNode;
 import javafx.scene.Node;
+import javafx.scene.control.TreeItem;
 
 import java.io.Serializable;
 
-public abstract class JNode implements Serializable {
+public abstract class JNode extends TreeItem<String> implements Serializable {
+//    protected Vector<JNode> children = new Vector<>();
+
+    protected void init() {
+        setValue(toString());
+        setGraphic(getIcon());
+    }
+
+    protected void add(JNode node) {
+//        children.add(node);
+        getChildren().add(node);
+    }
+
+    protected void removeAllChildren() {
+//        children.clear();
+        getChildren().clear();
+    }
 
     public abstract JClass getJParent();
 

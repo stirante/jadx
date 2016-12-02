@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.sun.tools.internal.xjc.reader.Ring.add;
-
 public class JResource extends JNode implements Comparable<JResource> {
 	private static final long serialVersionUID = -201018424302612434L;
 
@@ -52,9 +50,11 @@ public class JResource extends JNode implements Comparable<JResource> {
 		this.name = name;
 		this.shortName = shortName;
 		this.type = type;
+		init();
 	}
 
 	public final void update() {
+		removeAllChildren();
 		loadContent();
 		for (JResource res : files) {
 			res.update();

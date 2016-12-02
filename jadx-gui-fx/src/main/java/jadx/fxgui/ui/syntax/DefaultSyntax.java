@@ -1,4 +1,4 @@
-package jadx.fxgui.utils.syntax;
+package jadx.fxgui.ui.syntax;
 
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpansBuilder;

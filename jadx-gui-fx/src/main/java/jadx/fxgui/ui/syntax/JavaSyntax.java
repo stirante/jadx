@@ -1,4 +1,4 @@
-package jadx.fxgui.utils.syntax;
+package jadx.fxgui.ui.syntax;
 
 import jadx.fxgui.utils.AsyncTask;
 import org.fxmisc.richtext.CodeArea;

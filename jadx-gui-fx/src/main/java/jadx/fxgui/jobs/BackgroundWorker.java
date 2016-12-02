@@ -1,5 +1,6 @@
 package jadx.fxgui.jobs;
 
+import jadx.fxgui.JadxFxGUI;
 import jadx.fxgui.utils.AsyncTask;
 import jadx.fxgui.utils.CacheObject;
 import jadx.fxgui.utils.Utils;
@@ -14,9 +15,12 @@ public class BackgroundWorker extends AsyncTask<Void, Integer, Void> {
     private static final Logger LOG = LoggerFactory.getLogger(BackgroundWorker.class);
 
     private final CacheObject cache;
+    private JadxFxGUI main;
+    private String jobName = "";
 
-    public BackgroundWorker(CacheObject cacheObject) {
+    public BackgroundWorker(CacheObject cacheObject, JadxFxGUI jadxFxGUI) {
         this.cache = cacheObject;
+        main = jadxFxGUI;
     }
 
     public void exec() {
@@ -24,15 +28,16 @@ public class BackgroundWorker extends AsyncTask<Void, Integer, Void> {
             return;
         }
         Platform.runLater(() -> {
-//				progressPane.setVisible(true);
+            main.progress.setVisible(true);
+            main.statusText.setVisible(true);
         });
-//		addPropertyChangeListener(progressPane);
         execute();
     }
 
     @Override
     public void onProgress(Integer progress) {
-        //TODO: set progress
+        main.progress.setProgress(progress.doubleValue() / 100d);
+        main.statusText.setText(jobName + progress + "%");
     }
 
     public void stop() {
@@ -72,7 +77,7 @@ public class BackgroundWorker extends AsyncTask<Void, Integer, Void> {
         if (isCancelled()) {
             return;
         }
-//		progressPane.changeLabel(this, job.getInfoString());
+        jobName = job.getInfoString();
         Future<Boolean> future = job.process();
         while (!future.isDone()) {
             try {
@@ -89,6 +94,8 @@ public class BackgroundWorker extends AsyncTask<Void, Integer, Void> {
 
     @Override
     public void onPostExecute(Void result) {
-//		progressPane.setVisible(false);
+        main.progress.setVisible(false);
+        main.statusText.setVisible(false);
+        main.buildTree();
     }
 }

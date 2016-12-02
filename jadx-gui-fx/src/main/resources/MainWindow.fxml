@@ -9,7 +9,6 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TreeView?>
 
-
 <VBox xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MenuBar>
@@ -38,5 +37,15 @@
       </TabPane>
          </items>
       </SplitPane>
+      <HBox fx:id="pbox" prefHeight="25.0">
+         <children>
+            <StackPane prefHeight="25.0">
+               <children>
+                  <ProgressBar fx:id="progress" prefHeight="25.0" prefWidth="320.0" progress="0.0" />
+                  <Label fx:id="statusText" textFill="#9d9d9d"/>
+               </children>
+            </StackPane>
+         </children>
+      </HBox>
    </children>
 </VBox>

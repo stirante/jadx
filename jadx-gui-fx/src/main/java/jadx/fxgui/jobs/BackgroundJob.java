@@ -61,12 +61,17 @@ public abstract class BackgroundJob {
 
     private class ShutdownTask extends FutureTask<Boolean> {
         public ShutdownTask() {
-            super(() -> {
-                runJob();
-                executor.shutdown();
-                return executor.awaitTermination(5, TimeUnit.MINUTES);
+            //THIS IS SUPER IMPORTANT. DO NOT CHANGE TO LAMBDA. WEIRD SHIT IS HAPPENING
+            super(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    runJob();
+                    executor.shutdown();
+                    return executor.awaitTermination(5, TimeUnit.MINUTES);
+                }
             });
         }
+
 
         @Override
         public boolean cancel(boolean mayInterruptIfRunning) {

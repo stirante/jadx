@@ -1,7 +1,7 @@
 package jadx.fxgui.ui;
 
 import jadx.fxgui.treemodel.JNode;
-import jadx.fxgui.utils.syntax.BaseSyntax;
+import jadx.fxgui.ui.syntax.BaseSyntax;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;

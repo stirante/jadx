@@ -11,8 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sun.tools.internal.xjc.reader.Ring.add;
-
 public class JPackage extends JNode implements Comparable<JPackage> {
     private static final long serialVersionUID = -4120718634156839804L;
 
@@ -28,6 +26,7 @@ public class JPackage extends JNode implements Comparable<JPackage> {
         for (JavaClass javaClass : javaClasses) {
             classes.add(new JClass(javaClass));
         }
+        init();
         update();
     }
 
@@ -37,6 +36,7 @@ public class JPackage extends JNode implements Comparable<JPackage> {
     }
 
     public final void update() {
+        removeAllChildren();
         for (JPackage pkg : innerPackages) {
             pkg.update();
             add(pkg);
@@ -54,6 +54,7 @@ public class JPackage extends JNode implements Comparable<JPackage> {
 
     public void setName(String name) {
         this.name = name;
+        init();
     }
 
     public List<JPackage> getInnerPackages() {

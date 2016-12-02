@@ -9,8 +9,6 @@ import javafx.scene.image.ImageView;
 
 import java.util.*;
 
-import static com.sun.tools.internal.xjc.reader.Ring.add;
-
 public class JSources extends JNode {
     private static final long serialVersionUID = 8962924556824862801L;
 
@@ -22,13 +20,16 @@ public class JSources extends JNode {
     public JSources(JRoot jRoot, JadxWrapper wrapper) {
         this.flatPackages = jRoot.isFlatPackages();
         this.wrapper = wrapper;
+        init();
         update();
     }
 
     public final void update() {
+        removeAllChildren();
         if (flatPackages) {
             for (JavaPackage pkg : wrapper.getPackages()) {
-                add(new JPackage(pkg));
+                JPackage node = new JPackage(pkg);
+                add(node);
             }
         } else {
             // build packages hierarchy

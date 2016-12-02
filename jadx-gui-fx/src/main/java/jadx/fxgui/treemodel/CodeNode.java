@@ -19,6 +19,7 @@ public class CodeNode extends JNode {
 		this.jParent = this.jNode.getJParent();
 		this.line = line;
 		this.lineNum = lineNum;
+		init();
 	}
 
 	public Node getIcon() {

@@ -29,6 +29,7 @@ public class JMethod extends JNode {
     public JMethod(JavaMethod javaMethod, JClass jClass) {
         this.mth = javaMethod;
         this.jParent = jClass;
+        init();
     }
 
     @Override

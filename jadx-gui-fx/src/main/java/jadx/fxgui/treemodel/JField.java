@@ -26,6 +26,7 @@ public class JField extends JNode {
     public JField(JavaField javaField, JClass jClass) {
         this.field = javaField;
         this.jParent = jClass;
+        init();
     }
 
     @Override

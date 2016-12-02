@@ -10,6 +10,7 @@ public class TextNode extends JNode {
 
 	public TextNode(String str) {
 		this.label = str;
+		init();
 	}
 
 	@Override

@@ -11,8 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import static com.sun.tools.internal.xjc.reader.Ring.add;
-
 public class JClass extends JNode {
     private static final long serialVersionUID = -1239986875244097177L;
 
@@ -32,12 +30,14 @@ public class JClass extends JNode {
         this.cls = cls;
         this.jParent = null;
         this.loaded = false;
+        init();
     }
 
     public JClass(JavaClass cls, JClass parent) {
         this.cls = cls;
         this.jParent = parent;
         this.loaded = true;
+        init();
     }
 
     public JavaClass getCls() {
@@ -53,6 +53,7 @@ public class JClass extends JNode {
     }
 
     public synchronized void update() {
+        removeAllChildren();
         if (!loaded) {
             add(new TextNode(NLS.str("tree.loading")));
         } else {

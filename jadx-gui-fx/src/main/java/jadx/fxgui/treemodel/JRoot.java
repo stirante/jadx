@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.sun.tools.internal.xjc.reader.Ring.add;
-
 public class JRoot extends JNode {
     private static final long serialVersionUID = 8888495789773527342L;
 
@@ -25,10 +23,12 @@ public class JRoot extends JNode {
 
     public JRoot(JadxWrapper wrapper) {
         this.wrapper = wrapper;
+        init();
         update();
     }
 
     public final void update() {
+        removeAllChildren();
         add(new JSources(this, wrapper));
 
         List<JResource> resList = getHierarchyResources(wrapper.getResources());
