@@ -1,0 +1,83 @@
+.root {
+    /*-fx-font-size: 11pt;*/
+    /*-fx-font-family: "Courier New";*/
+    -fx-focus-color: transparent;
+    -fx-base: #323232;
+    -fx-background: #2B2B2B;
+    -fx-background-color: #2B2B2B;
+    -fx-control-inner-background: #2B2B2B;
+    -fx-text-base-color: #c7c7c7;
+}
+
+.text {
+    -fx-fill: #c7c7c7;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #323232;
+}
+
+.paragraph-box {
+    -fx-background-color: #2B2B2B;
+}
+
+.lineno {
+    -fx-background-color: #323232;
+}
+
+.styled-text-area {
+    -fx-background-color: #2B2B2B;
+    -fx-highlight-text-fill: #214283;
+}
+
+.comment {
+    -fx-fill: #74a567;
+}
+
+/* Java highlighting */
+
+.keyword {
+    -fx-fill: #d78b40;
+    -fx-font-weight: bold;
+}
+
+.semicolon {
+    -fx-font-weight: bold;
+}
+
+.paren {
+    -fx-fill: #b8c4d1;
+    -fx-font-weight: bold;
+}
+
+.bracket {
+    -fx-fill: #b8c4d1;
+    -fx-font-weight: bold;
+}
+
+.brace {
+    -fx-fill: #b8c4d1;
+    -fx-font-weight: bold;
+}
+
+.string {
+    -fx-fill: #7c986c;
+}
+
+/* XML highlighting */
+
+.tagmark {
+    -fx-fill: #c7c7c7;
+}
+
+.anytag {
+    -fx-fill: #d78b40;
+}
+
+.attribute {
+    -fx-fill: #b8c4d1;
+}
+
+.avalue {
+    -fx-fill: #7c986c;
+}
