@@ -4,6 +4,7 @@ import jadx.core.codegen.CodeWriter;
 import jadx.core.dex.attributes.AFlag;
 import jadx.core.dex.attributes.nodes.LineAttrNode;
 import jadx.core.dex.info.AccessInfo;
+import jadx.core.dex.info.ClassInfo;
 import jadx.core.dex.nodes.ClassNode;
 import jadx.core.dex.nodes.FieldNode;
 import jadx.core.dex.nodes.MethodNode;
@@ -264,4 +265,9 @@ public final class JavaClass implements JavaNode {
 	public String toString() {
 		return cls.getFullName() + "[ " + getFullName() + " ]";
 	}
+
+	public ClassInfo getClassInfo() {
+		return cls.getClassInfo();
+	}
+
 }

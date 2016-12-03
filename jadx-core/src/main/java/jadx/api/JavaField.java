@@ -1,6 +1,7 @@
 package jadx.api;
 
 import jadx.core.dex.info.AccessInfo;
+import jadx.core.dex.info.FieldInfo;
 import jadx.core.dex.instructions.args.ArgType;
 import jadx.core.dex.nodes.FieldNode;
 
@@ -59,5 +60,9 @@ public final class JavaField implements JavaNode {
 	@Override
 	public String toString() {
 		return field.toString();
+	}
+
+	public FieldInfo getFieldInfo() {
+		return field.getFieldInfo();
 	}
 }
