@@ -1,6 +1,7 @@
 package jadx.api;
 
 import jadx.core.dex.info.AccessInfo;
+import jadx.core.dex.info.MethodInfo;
 import jadx.core.dex.instructions.args.ArgType;
 import jadx.core.dex.nodes.MethodNode;
 
@@ -72,5 +73,9 @@ public final class JavaMethod implements JavaNode {
 	@Override
 	public String toString() {
 		return mth.toString();
+	}
+
+	public MethodInfo getMethodInfo() {
+		return mth.getMethodInfo();
 	}
 }

@@ -1,6 +1,9 @@
 package jadx.gui.ui;
 
 import jadx.api.*;
+import jadx.core.dex.info.ClassInfo;
+import jadx.core.dex.info.FieldInfo;
+import jadx.core.dex.info.MethodInfo;
 import jadx.core.dex.instructions.args.ArgType;
 import jadx.gui.settings.JadxSettings;
 import jadx.gui.treemodel.JClass;
@@ -10,6 +13,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -96,20 +100,28 @@ class CodeArea extends RSyntaxTextArea {
     }
 
     private void addMenuItems(CodeArea codeArea, JClass jCls) {
-        Action findUsage = new FindUsageAction(codeArea, jCls);
-        Action genHook = new GenerateHookAction(codeArea, jCls);
-        Action genCall = new GenerateCallerAction(codeArea, jCls);
         // TODO: hotkey works only when popup menu is shown
         // findUsage.putValue(Action.ACCELERATOR_KEY, getKeyStroke(KeyEvent.VK_F7, KeyEvent.ALT_DOWN_MASK));
 
         JPopupMenu popup = getPopupMenu();
         popup.addSeparator();
+
+        Action findUsage = new FindUsageAction(codeArea, jCls);
         popup.add(findUsage);
-        popup.add(genHook);
-        popup.add(genCall);
         popup.addPopupMenuListener((PopupMenuListener) findUsage);
+
+        Action genHook = new GenerateHookAction(codeArea, jCls);
+        popup.add(genHook);
         popup.addPopupMenuListener((PopupMenuListener) genHook);
+
+
+        Action genCall = new GenerateCallerAction(codeArea, jCls);
+        popup.add(genCall);
         popup.addPopupMenuListener((PopupMenuListener) genCall);
+
+        Action genJOBF = new GenerateJOBFString(codeArea, jCls);
+        popup.add(genJOBF);
+        popup.addPopupMenuListener((PopupMenuListener) genJOBF);
     }
 
     public void loadSettings() {
@@ -408,6 +420,80 @@ class CodeArea extends RSyntaxTextArea {
                 }
             }
             if (node != null && (node instanceof JavaField || node instanceof JavaMethod)) setEnabled(true);
+            else setEnabled(false);
+        }
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+        }
+
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent e) {
+        }
+    }
+
+    private class GenerateJOBFString extends AbstractAction implements PopupMenuListener {
+        private static final long serialVersionUID = 0L;
+
+        private final CodeArea contentArea;
+        private final JClass jCls;
+
+        private JavaNode node;
+
+        public GenerateJOBFString(CodeArea contentArea, JClass jCls) {
+            super("Generate String For JOBF Override");
+            this.contentArea = contentArea;
+            this.jCls = jCls;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (node == null) {
+                return;
+            }
+            MainWindow mainWindow = contentPanel.getTabbedPane().getMainWindow();
+            String strOut = "Use the following in the .JOBF file: ";
+            if (node instanceof JavaMethod) {
+                JavaMethod meth = (JavaMethod) node;
+                MethodInfo methInfo = meth.getMethodInfo();
+                String strToAddToFile = "m " + methInfo.getFullId() + " = newName";
+                StringSelection selection = new StringSelection(strToAddToFile);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(selection, selection);
+                JOptionPane.showMessageDialog(mainWindow, strOut + strToAddToFile + "\nCopied To Clipboard");
+            }
+            if (node instanceof JavaField) {
+                JavaField fld = (JavaField) node;
+                FieldInfo fldInfo = fld.getFieldInfo();
+                String strToAddToFile = "f " + fldInfo.getFullId() + " = newName";
+                StringSelection selection = new StringSelection(strToAddToFile);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(selection, selection);
+                JOptionPane.showMessageDialog(mainWindow, strOut + strToAddToFile + "\nCopied To Clipboard");
+            }
+            if (node instanceof JavaClass) {
+                JavaClass cls = (JavaClass) node;
+                ClassInfo clsInfo =  cls.getClassInfo();
+                String strToAddToFile = "c " + clsInfo.getFullName() + " = newName";
+                StringSelection selection = new StringSelection(strToAddToFile);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(selection, selection);
+                JOptionPane.showMessageDialog(mainWindow, strOut + strToAddToFile + "\nCopied To Clipboard");
+            }
+        }
+
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            node = null;
+            Point pos = contentArea.getMousePosition();
+            if (pos != null) {
+                Token token = contentArea.viewToToken(pos);
+                if (token != null) {
+                    node = getJavaNodeAtOffset(jCls, contentArea, token.getOffset());
+                }
+            }
+            if (node != null && (node instanceof JavaClass || node instanceof JavaField || node instanceof JavaMethod))
+                setEnabled(true);
             else setEnabled(false);
         }
 
