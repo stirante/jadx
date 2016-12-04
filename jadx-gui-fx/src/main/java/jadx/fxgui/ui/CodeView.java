@@ -1,5 +1,7 @@
 package jadx.fxgui.ui;
 
+import jadx.api.JavaNode;
+import jadx.fxgui.treemodel.JClass;
 import jadx.fxgui.treemodel.JNode;
 import jadx.fxgui.ui.syntax.BaseSyntax;
 import javafx.fxml.FXML;
@@ -8,16 +10,20 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CharacterHit;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by stirante
  */
 public class CodeView extends Tab {
 
+    private static final Pattern WORD = Pattern.compile("\\w+");
     @FXML
     public StackPane content;
     private CodeArea codeArea;
@@ -34,6 +40,16 @@ public class CodeView extends Tab {
                 .subscribe(change -> syntax.computeHighlighting(codeArea));
         codeArea.replaceText(0, 0, node.getContent());
         codeArea.setEditable(false);
+        codeArea.setOnContextMenuRequested(event -> {
+            if (node instanceof JClass) {
+                CharacterHit hit = codeArea.hit(event.getX(), event.getY());
+                JClass clz = (JClass) node;
+                JavaNode jnode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
+                System.out.println(jnode);
+                if (jnode != null)
+                    codeArea.moveTo(codeArea.position(clz.getCls().getDefinitionPosition(jnode).getLine() - 1, 0).toOffset());
+            }
+        });
         FXMLLoader loader = new FXMLLoader(CodeView.class.getResource("/Tab.fxml"));
         loader.setController(this);
         try {
@@ -45,6 +61,47 @@ public class CodeView extends Tab {
             e.printStackTrace();
         }
         setText(node.getName());
+    }
+
+//    private Position getDefPosition(JClass jCls, int offset) {
+//        JavaNode node = getJavaNodeAtOffset(jCls, offset);
+//        if (node == null) {
+//            return null;
+//        }
+//        CodePosition pos = jCls.getCls().getDefinitionPosition(node);
+//        if (pos == null) {
+//            return null;
+//        }
+//        return new Position(pos);
+//    }
+
+    private JavaNode getJavaNodeAtOffset(JClass jCls, int offset) {
+        int index = offset;
+        Matcher matcher = WORD.matcher(codeArea.getText());
+        while (matcher.find()) {
+            if (matcher.start() <= offset && matcher.end() >= offset) {
+                index = matcher.start();
+            }
+        }
+        int[] ints = toLineAndCol(index);
+        int line = ints[0];
+        int lineOffset = ints[1];
+        return jCls.getCls().getJavaNodeAtPosition(line, lineOffset);
+    }
+
+    private int[] toLineAndCol(int index) {
+        int c = 0;
+        int line = 1, col = 1;
+        while (c <= index) {
+            if (codeArea.getText().charAt(c) == '\n') {
+                ++line;
+                col = 1;
+            } else {
+                ++col;
+            }
+            c++;
+        }
+        return new int[]{line, col - 1};
     }
 
     @Override
