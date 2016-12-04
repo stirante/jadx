@@ -393,8 +393,9 @@ public class JadxFxGUI extends Application {
             progress.prefWidthProperty().bind(fileTree.widthProperty());
             fileTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             fileTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println(newValue.getClass().toString());
+                //TODO: add new tab
             });
+            fileTree.setEditable(false);
             primaryStage.show();
             stage = primaryStage;
             if (settings.getInput().isEmpty()) {
