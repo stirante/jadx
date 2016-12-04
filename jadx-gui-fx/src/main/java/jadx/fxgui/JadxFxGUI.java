@@ -430,7 +430,8 @@ public class JadxFxGUI extends Application {
         stage.setTitle(DEFAULT_TITLE + " - " + f.getName());
         settings.addRecentFile(f.getAbsolutePath());
         buildTree();
-        runBackgroundJobs();
+        //TODO: Disabled for testing
+//        runBackgroundJobs();
     }
 
     public void buildTree() {
@@ -468,6 +469,7 @@ public class JadxFxGUI extends Application {
     }
 
     public void openTab(JNode node) {
+        //TODO: Add opening fields and methods and fix opening inner classes
         Tab tab;
         if (node instanceof JClass || (node instanceof JResource && ((JResource) node).isText()))
             tab = new CodeView(node);

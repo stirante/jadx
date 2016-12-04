@@ -6,6 +6,8 @@ import jadx.fxgui.treemodel.JNode;
 import jadx.fxgui.ui.syntax.BaseSyntax;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -29,9 +31,16 @@ public class CodeView extends Tab {
     private CodeArea codeArea;
     private BaseSyntax syntax;
     private JNode node;
+    private ContextMenu context;
 
     public CodeView(JNode node) {
         this.node = node;
+        context = new ContextMenu();
+        MenuItem item1 = new MenuItem("Copy");
+        item1.setOnAction(e -> System.out.println("Copy"));
+        MenuItem item2 = new MenuItem("Find usage");
+        item2.setOnAction(e -> System.out.println("Find usage"));
+        context.getItems().addAll(item1, item2);
         syntax = BaseSyntax.getFor(node.getSyntaxName());
         codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
@@ -42,6 +51,16 @@ public class CodeView extends Tab {
         codeArea.setEditable(false);
         codeArea.setOnContextMenuRequested(event -> {
             if (node instanceof JClass) {
+                CharacterHit hit = codeArea.hit(event.getX(), event.getY());
+                JClass clz = (JClass) node;
+                JavaNode jnode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
+                System.out.println(jnode);
+                context.show(codeArea, event.getScreenX(), event.getScreenY());
+            }
+        });
+        codeArea.setOnMouseClicked(event -> {
+            context.hide();
+            if (event.isControlDown() && node instanceof JClass) {
                 CharacterHit hit = codeArea.hit(event.getX(), event.getY());
                 JClass clz = (JClass) node;
                 JavaNode jnode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
