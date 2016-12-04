@@ -96,6 +96,5 @@ public class BackgroundWorker extends AsyncTask<Void, Integer, Void> {
     public void onPostExecute(Void result) {
         main.progress.setVisible(false);
         main.statusText.setVisible(false);
-        main.buildTree();
     }
 }

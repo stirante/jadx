@@ -30,6 +30,9 @@ public class JClass extends JNode {
         this.cls = cls;
         this.jParent = null;
         this.loaded = false;
+        expandedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) load();
+        });
         init();
     }
 
