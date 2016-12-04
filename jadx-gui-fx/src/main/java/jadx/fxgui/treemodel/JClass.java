@@ -163,4 +163,5 @@ public class JClass extends JNode {
     public String makeLongString() {
         return cls.getFullName();
     }
+
 }

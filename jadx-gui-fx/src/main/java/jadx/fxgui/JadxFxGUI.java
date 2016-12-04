@@ -7,8 +7,10 @@ import jadx.fxgui.settings.JadxSettings;
 import jadx.fxgui.settings.JadxSettingsAdapter;
 import jadx.fxgui.treemodel.JClass;
 import jadx.fxgui.treemodel.JNode;
+import jadx.fxgui.treemodel.JResource;
 import jadx.fxgui.treemodel.JRoot;
 import jadx.fxgui.ui.CodeView;
+import jadx.fxgui.ui.DrawableView;
 import jadx.fxgui.utils.CacheObject;
 import jadx.fxgui.utils.LogCollector;
 import javafx.application.Application;
@@ -393,6 +395,7 @@ public class JadxFxGUI extends Application {
             progress.prefWidthProperty().bind(fileTree.widthProperty());
             fileTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             fileTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                openTab((JNode) newValue);
                 //TODO: add new tab
             });
             fileTree.setEditable(false);
@@ -465,7 +468,12 @@ public class JadxFxGUI extends Application {
     }
 
     public void openTab(JNode node) {
-        CodeView tab = new CodeView(node);
+        Tab tab;
+        if (node instanceof JClass || (node instanceof JResource && ((JResource) node).isText()))
+            tab = new CodeView(node);
+        else if (node instanceof JResource && ((JResource) node).isImage())
+            tab = new DrawableView(node);
+        else return;
         if (!tabs.getTabs().contains(tab)) {
             tabs.getTabs().add(tab);
             tabs.getSelectionModel().select(tab);

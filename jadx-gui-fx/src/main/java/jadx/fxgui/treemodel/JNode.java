@@ -78,4 +78,5 @@ public abstract class JNode extends TreeItem<String> implements Serializable {
     public String toString() {
         return makeString();
     }
+
 }
