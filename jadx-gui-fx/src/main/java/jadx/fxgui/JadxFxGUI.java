@@ -5,10 +5,7 @@ import jadx.fxgui.jobs.DecompileJob;
 import jadx.fxgui.jobs.IndexJob;
 import jadx.fxgui.settings.JadxSettings;
 import jadx.fxgui.settings.JadxSettingsAdapter;
-import jadx.fxgui.treemodel.JClass;
-import jadx.fxgui.treemodel.JNode;
-import jadx.fxgui.treemodel.JResource;
-import jadx.fxgui.treemodel.JRoot;
+import jadx.fxgui.treemodel.*;
 import jadx.fxgui.ui.CodeView;
 import jadx.fxgui.ui.DrawableView;
 import jadx.fxgui.utils.CacheObject;
@@ -469,13 +466,27 @@ public class JadxFxGUI extends Application {
     }
 
     public void openTab(JNode node) {
-        //TODO: Add opening fields and methods and fix opening inner classes
         Tab tab;
-        if (node instanceof JClass || (node instanceof JResource && ((JResource) node).isText()))
+        if ((node instanceof JClass && node.getJParent() == null) || (node instanceof JResource && ((JResource) node).isText()))
             tab = new CodeView(node);
         else if (node instanceof JResource && ((JResource) node).isImage())
             tab = new DrawableView(node);
-        else return;
+        else {
+            if (node instanceof JField || node instanceof JMethod || (node instanceof JClass && node.getJParent() != null)) {
+                JClass parent = node.getJParent();
+                tab = new CodeView(parent);
+                if (!tabs.getTabs().contains(tab)) {
+                    tabs.getTabs().add(tab);
+                    tabs.getSelectionModel().select(tab);
+                    ((CodeView) tab).goTo(node);
+                } else {
+                    tabs.getSelectionModel().select(tab);
+                    tabs.getTabs().stream().filter(tab1 -> tab1.equals(tab)).forEach(tab1 -> ((CodeView) tab1).goTo(node));
+                }
+
+            }
+            return;
+        }
         if (!tabs.getTabs().contains(tab)) {
             tabs.getTabs().add(tab);
             tabs.getSelectionModel().select(tab);
