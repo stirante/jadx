@@ -28,11 +28,6 @@ public class Utils {
         return new Image(is);
     }
 
-//    public static void addKeyBinding(JComponent comp, KeyStroke key, String id, Action action) {
-//        comp.getInputMap().put(key, id);
-//        comp.getActionMap().put(id, action);
-//    }
-
     public static String typeFormat(String name, ArgType type) {
         return name + " : " + typeStr(type);
     }

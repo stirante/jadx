@@ -8,8 +8,10 @@ import jadx.fxgui.settings.JadxSettingsAdapter;
 import jadx.fxgui.treemodel.*;
 import jadx.fxgui.ui.CodeView;
 import jadx.fxgui.ui.DrawableView;
+import jadx.fxgui.utils.AsyncTask;
 import jadx.fxgui.utils.CacheObject;
 import jadx.fxgui.utils.LogCollector;
+import jadx.fxgui.utils.NLS;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -423,18 +425,26 @@ public class JadxFxGUI extends Application {
     private void openFile(File f) {
         tabs.getTabs().clear();
         resetCache();
-        wrapper.openFile(f);
+        TreeItem<String> item = new TreeItem<>(NLS.str("tree.loading"));
+        fileTree.setRoot(item);
+        new AsyncTask<Void, Void, JRoot>() {
+            @Override
+            public JRoot doInBackground(Void[] params) {
+                wrapper.openFile(f);
+                JRoot treeRoot = new JRoot(wrapper);
+                treeRoot.setFlatPackages(settings.isFlattenPackage());
+                return treeRoot;
+            }
+
+            @Override
+            public void onPostExecute(JRoot result) {
+                fileTree.setRoot(result);
+                //TODO: Disabled for testing
+//                runBackgroundJobs();
+            }
+        }.execute();
         stage.setTitle(DEFAULT_TITLE + " - " + f.getName());
         settings.addRecentFile(f.getAbsolutePath());
-        buildTree();
-        //TODO: Disabled for testing
-//        runBackgroundJobs();
-    }
-
-    public void buildTree() {
-        JRoot treeRoot = new JRoot(wrapper);
-        treeRoot.setFlatPackages(settings.isFlattenPackage());
-        fileTree.setRoot(treeRoot);
     }
 
     private synchronized void runBackgroundJobs() {
