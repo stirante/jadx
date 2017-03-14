@@ -40,7 +40,6 @@ public class JadxFxGUI extends Application {
             "import android.content.Intent;\n" +
             "import android.content.res.Resources;\n" +
             "import android.text.SpannableStringBuilder;\n" +
-            "import android.text.TextUtils;\n" +
             "import android.widget.Toast;\n" +
             "\n" +
             "import com.stirante.instaprefs.utils.FileUtils;\n" +
