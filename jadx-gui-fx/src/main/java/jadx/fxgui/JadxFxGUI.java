@@ -1,5 +1,6 @@
 package jadx.fxgui;
 
+import jadx.api.JavaNode;
 import jadx.fxgui.jobs.BackgroundWorker;
 import jadx.fxgui.jobs.DecompileJob;
 import jadx.fxgui.jobs.IndexJob;
@@ -392,10 +393,7 @@ public class JadxFxGUI extends Application {
             pbox.prefWidthProperty().bind(fileTree.widthProperty());
             progress.prefWidthProperty().bind(fileTree.widthProperty());
             fileTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            fileTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                openTab((JNode) newValue);
-                //TODO: add new tab
-            });
+            fileTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> openTab(newValue));
             fileTree.setEditable(false);
             primaryStage.show();
             stage = primaryStage;
@@ -474,27 +472,39 @@ public class JadxFxGUI extends Application {
         cacheObject.setIndexJob(new IndexJob(wrapper, cacheObject, threadsCount));
     }
 
-    public void openTab(JNode node) {
-        Tab tab;
-        if ((node instanceof JClass && node.getJParent() == null) || (node instanceof JResource && ((JResource) node).isText()))
-            tab = new CodeView(node);
+    public void openTab(Object node) {
+        Tab tab = null;
+        if ((node instanceof JClass && ((JClass) node).getJParent() == null) || (node instanceof JResource && ((JResource) node).isText()))
+            tab = new CodeView(this, (JNode) node);
         else if (node instanceof JResource && ((JResource) node).isImage())
-            tab = new DrawableView(node);
-        else {
-            if (node instanceof JField || node instanceof JMethod || (node instanceof JClass && node.getJParent() != null)) {
-                JClass parent = node.getJParent();
-                tab = new CodeView(parent);
+            tab = new DrawableView((JNode) node);
+        else if (node instanceof JNode) {
+            if (node instanceof JField || node instanceof JMethod || (node instanceof JClass && ((JClass) node).getJParent() != null)) {
+                JClass parent = ((JNode) node).getJParent();
+                tab = new CodeView(this, parent);
                 if (!tabs.getTabs().contains(tab)) {
                     tabs.getTabs().add(tab);
                     tabs.getSelectionModel().select(tab);
-                    ((CodeView) tab).goTo(node);
+                    ((CodeView) tab).goTo((JNode) node);
                 } else {
                     tabs.getSelectionModel().select(tab);
-                    tabs.getTabs().stream().filter(tab1 -> tab1.equals(tab)).forEach(tab1 -> ((CodeView) tab1).goTo(node));
+                    Tab finalTab = tab;
+                    tabs.getTabs().stream().filter(tab1 -> tab1.equals(finalTab)).forEach(tab1 -> ((CodeView) tab1).goTo((JNode) node));
                 }
 
             }
             return;
+        } else if (node instanceof JavaNode) {
+            JClass jc = new JClass(((JavaNode) node).getTopParentClass());
+            tab = new CodeView(this, jc);
+            if (!tabs.getTabs().contains(tab)) {
+                tabs.getTabs().add(tab);
+                tabs.getSelectionModel().select(tab);
+                ((CodeView) tab).goTo((JavaNode) node);
+            }
+        }
+        if (tab == null) {
+            throw new IllegalArgumentException("Invalid argument type in openTab (" + node.getClass().getName() + ")");
         }
         if (!tabs.getTabs().contains(tab)) {
             tabs.getTabs().add(tab);

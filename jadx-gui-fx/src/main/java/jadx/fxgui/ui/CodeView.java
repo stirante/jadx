@@ -1,6 +1,7 @@
 package jadx.fxgui.ui;
 
 import jadx.api.JavaNode;
+import jadx.fxgui.JadxFxGUI;
 import jadx.fxgui.treemodel.JClass;
 import jadx.fxgui.treemodel.JNode;
 import jadx.fxgui.ui.syntax.BaseSyntax;
@@ -37,13 +38,15 @@ public class CodeView extends Tab {
     public StackPane content;
     private CodeArea codeArea;
     private BaseSyntax syntax;
+    private final JadxFxGUI app;
     private JNode node;
     private ContextMenu context;
     private JavaNode currentNode;
     private boolean initialized = false;
     private int line = 0;
 
-    public CodeView(JNode node) {
+    public CodeView(JadxFxGUI app, JNode node) {
+        this.app = app;
         this.node = node;
         context = new ContextMenu();
         copyItem = new MenuItem(NLS.str("popup.copy"));
@@ -91,6 +94,7 @@ public class CodeView extends Tab {
             String selectedText = codeArea.getSelectedText();
             copyItem.setDisable(selectedText == null || selectedText.isEmpty());
             if (node instanceof JClass) {
+//                ((JClass) node).getCls().getClassInfo().rename(((JClass) node).getCls().getClassNode().dex(), "Test");
                 CharacterHit hit = codeArea.hit(event.getX(), event.getY());
                 JClass clz = (JClass) node;
                 currentNode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
@@ -104,8 +108,13 @@ public class CodeView extends Tab {
                 JClass clz = (JClass) node;
                 JavaNode jnode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
                 System.out.println(jnode);
-                if (jnode != null)
-                    codeArea.moveTo(codeArea.position(clz.getCls().getDefinitionPosition(jnode).getLine() - 1, 0).toOffset());
+                if (jnode != null) {
+                    if (jnode.equals(((JClass) node).getCls()))
+                        codeArea.moveTo(codeArea.position(clz.getCls().getDefinitionPosition(jnode).getLine() - 1, 0).toOffset());
+                    else {
+                        app.openTab(jnode);
+                    }
+                }
             }
         });
         FXMLLoader loader = new FXMLLoader(CodeView.class.getResource("/Tab.fxml"));
@@ -170,5 +179,12 @@ public class CodeView extends Tab {
         if (initialized)
             codeArea.moveTo(codeArea.position(node.getLine() - 1, 0).toOffset());
         else line = node.getLine() - 1;
+    }
+
+    public void goTo(JavaNode node) {
+        int i = ((JClass) this.node).getCls().getDefinitionPosition(node).getLine() - 1;
+        if (initialized)
+            codeArea.moveTo(codeArea.position(i, 0).toOffset());
+        else line = i;
     }
 }

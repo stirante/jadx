@@ -9,6 +9,11 @@
     -fx-text-base-color: #c7c7c7;
 }
 
+.tree-view {
+    -fx-text-background-color: gray ;
+    -fx-selection-bar: #404040;
+}
+
 .text {
     -fx-fill: #c7c7c7;
 }
