@@ -14,8 +14,7 @@ public class NameMapper {
 			"(" + VALID_JAVA_IDENTIFIER + "\\.)*" + VALID_JAVA_IDENTIFIER);
 
 	private static final Set<String> RESERVED_NAMES = new HashSet<String>(
-			Arrays.asList(new String[]{
-					"abstract",
+			Arrays.asList("abstract",
 					"assert",
 					"boolean",
 					"break",
@@ -67,8 +66,7 @@ public class NameMapper {
 					"try",
 					"void",
 					"volatile",
-					"while",
-			})
+					"while")
 	);
 
 	public static boolean isReserved(String str) {

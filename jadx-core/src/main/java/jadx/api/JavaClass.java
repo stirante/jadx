@@ -65,7 +65,7 @@ public final class JavaClass implements JavaNode {
 		}
 	}
 
-	ClassNode getClassNode() {
+	public ClassNode getClassNode() {
 		return cls;
 	}
 
