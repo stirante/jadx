@@ -525,10 +525,16 @@ public class JadxFxGUI extends Application {
 
     public void openTab(Object node) {
         if (node == null) return;
+        CodeNode cn = null;
+        if (node instanceof CodeNode) {
+            cn = (CodeNode) node;
+            node = cn.getNode();
+        }
         Tab tab = null;
-        if ((node instanceof JClass && ((JClass) node).getJParent() == null) || (node instanceof JResource && ((JResource) node).isText()))
+        if ((node instanceof JClass && ((JClass) node).getJParent() == null) || (node instanceof JResource && ((JResource) node).isText())) {
             tab = new CodeView(this, (JNode) node);
-        else if (node instanceof JResource && ((JResource) node).isImage())
+            if (cn != null) ((CodeView) tab).goTo(cn.getLine());
+        } else if (node instanceof JResource && ((JResource) node).isImage())
             tab = new DrawableView((JNode) node);
         else if (node instanceof JNode) {
             if (node instanceof JField || node instanceof JMethod || (node instanceof JClass && ((JClass) node).getJParent() != null)) {
@@ -538,11 +544,17 @@ public class JadxFxGUI extends Application {
                 if (!tabs.getTabs().contains(tab)) {
                     tabs.getTabs().add(tab);
                     tabs.getSelectionModel().select(tab);
-                    ((CodeView) tab).goTo((JNode) node);
+                    if (cn != null) ((CodeView) tab).goTo(cn.getLine());
+                    else ((CodeView) tab).goTo((JNode) node);
                 } else {
                     tabs.getSelectionModel().select(tab);
                     Tab finalTab = tab;
-                    tabs.getTabs().stream().filter(tab1 -> tab1.equals(finalTab)).forEach(tab1 -> ((CodeView) tab1).goTo((JNode) node));
+                    Object finalNode = node;
+                    CodeNode finalCn = cn;
+                    tabs.getTabs().stream().filter(tab1 -> tab1.equals(finalTab)).forEach(tab1 -> {
+                        if (finalCn != null) ((CodeView) tab1).goTo(finalCn.getLine());
+                        else ((CodeView) tab1).goTo((JNode) finalNode);
+                    });
                 }
 
             }

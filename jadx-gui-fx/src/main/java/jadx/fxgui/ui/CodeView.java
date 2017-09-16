@@ -66,13 +66,9 @@ public class CodeView extends Tab {
         });
         usageItem = new MenuItem(NLS.str("popup.find_usage"));
         usageItem.setOnAction(e -> {
-            System.out.println(currentNode);
             JNode jNode = app.getCacheObject().getNodeCache().makeFrom(currentNode);
             List<CodeNode> usageList = app.getCacheObject().getUsageInfo().getUsageList(jNode);
-            for (CodeNode codeNode : usageList) {
-                System.out.println(codeNode);
-            }
-            Dialogs.showInfo("Not yet implemented", "This feature is not yet implemented");
+            new UsageWindow(app, jNode, usageList).show();
         });
         renameItem = new MenuItem("Rename");
         renameItem.setOnAction(e -> {
@@ -219,6 +215,12 @@ public class CodeView extends Tab {
         if (initialized)
             codeArea.moveTo(codeArea.position(i, 0).toOffset());
         else line = i;
+    }
+
+    public void goTo(int line) {
+        if (initialized)
+            codeArea.moveTo(codeArea.position(line - 1, 0).toOffset());
+        else this.line = line - 1;
     }
 
     public void refresh() {

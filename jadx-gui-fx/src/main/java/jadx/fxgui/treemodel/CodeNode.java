@@ -47,4 +47,8 @@ public class CodeNode {
     public String toString() {
         return getLineString();
     }
+
+    public JNode getNode() {
+        return jNode;
+    }
 }
