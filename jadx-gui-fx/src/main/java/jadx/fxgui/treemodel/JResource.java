@@ -26,7 +26,7 @@ public class JResource extends JNode implements Comparable<JResource> {
     private static final Image ERROR_ICON = Utils.openIcon("error_co");
     private final String name;
     private final String shortName;
-    private final List<JResource> files = new ArrayList<JResource>(1);
+    private final List<JResource> files = new ArrayList<>(1);
     private final JResType type;
     private final ResourceFile resFile;
     private boolean loaded;
@@ -248,10 +248,7 @@ public class JResource extends JNode implements Comparable<JResource> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        return name.equals(((JResource) o).name) && resFile.equals(((JResource) o).resFile);
+        return o != null && getClass() == o.getClass() && name.equals(((JResource) o).name) && resFile.equals(((JResource) o).resFile);
     }
 
     @Override

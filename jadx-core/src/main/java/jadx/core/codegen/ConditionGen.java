@@ -26,7 +26,7 @@ public class ConditionGen extends InsnGen {
 	private static final Logger LOG = LoggerFactory.getLogger(ConditionGen.class);
 
 	private static class CondStack {
-		private final Queue<IfCondition> stack = new LinkedList<IfCondition>();
+		private final Queue<IfCondition> stack = new LinkedList<>();
 
 		public Queue<IfCondition> getStack() {
 			return stack;
@@ -159,11 +159,8 @@ public class ConditionGen extends InsnGen {
 	}
 
 	private boolean isWrapNeeded(IfCondition condition) {
-		if (condition.isCompare()) {
-			return false;
-		}
-		return condition.getMode() != Mode.NOT;
-	}
+        return !condition.isCompare() && condition.getMode() != Mode.NOT;
+    }
 
 	private static boolean isArgWrapNeeded(InsnArg arg) {
 		if (!arg.isInsnWrap()) {

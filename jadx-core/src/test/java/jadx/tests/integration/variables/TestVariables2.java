@@ -12,7 +12,7 @@ public class TestVariables2 extends IntegrationTest {
 
 	public static class TestCls {
 		Object test(Object s) {
-			Object store = s != null ? s : null;
+			Object store = s;
 			if (store == null) {
 				store = new Object();
 				s = store;

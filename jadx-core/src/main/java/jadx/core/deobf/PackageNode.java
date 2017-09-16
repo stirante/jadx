@@ -86,7 +86,7 @@ public class PackageNode {
 
 	public void addInnerPackage(PackageNode pkg) {
 		if (innerPackages.isEmpty()) {
-			innerPackages = new ArrayList<PackageNode>();
+			innerPackages = new ArrayList<>();
 		}
 		innerPackages.add(pkg);
 		pkg.parentPackage = this;
@@ -115,7 +115,7 @@ public class PackageNode {
 	 * @return stack with parent packages
 	 */
 	private Stack<PackageNode> getParentPackages() {
-		Stack<PackageNode> pp = new Stack<PackageNode>();
+		Stack<PackageNode> pp = new Stack<>();
 
 		PackageNode currentP = this;
 		PackageNode parentP = currentP.getParentPackage();

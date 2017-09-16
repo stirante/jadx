@@ -19,8 +19,7 @@ public class TestTryCatchFinally2 extends IntegrationTest {
 		private NClass[] classes;
 
 		public void test(OutputStream output) throws IOException {
-			DataOutputStream out = new DataOutputStream(output);
-			try {
+			try (DataOutputStream out = new DataOutputStream(output)) {
 				out.writeByte(1);
 				out.writeInt(classes.length);
 				for (NClass cls : classes) {
@@ -33,8 +32,6 @@ public class TestTryCatchFinally2 extends IntegrationTest {
 						out.writeInt(parent.getId());
 					}
 				}
-			} finally {
-				out.close();
 			}
 		}
 

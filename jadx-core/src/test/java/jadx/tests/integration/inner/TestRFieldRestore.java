@@ -26,7 +26,7 @@ public class TestRFieldRestore extends IntegrationTest {
 		// unknown R class
 		disableCompilation();
 
-		Map<Integer, String> map = new HashMap<Integer, String>();
+		Map<Integer, String> map = new HashMap<>();
 		map.put(2131230730, "id.Button");
 		setResMap(map);
 

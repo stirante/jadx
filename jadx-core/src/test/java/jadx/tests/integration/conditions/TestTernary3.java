@@ -18,12 +18,9 @@ public class TestTernary3 extends IntegrationTest {
 	public static class TestCls {
 
 		public boolean isNameEquals(InsnArg arg) {
-			String n = getName(arg);
-			if (n == null || !(arg instanceof Named)) {
-				return false;
-			}
-			return n.equals(((Named) arg).getName());
-		}
+            String n = getName(arg);
+            return n != null && arg instanceof Named && n.equals(((Named) arg).getName());
+        }
 
 		private String getName(InsnArg arg) {
 			if (arg instanceof RegisterArg) {

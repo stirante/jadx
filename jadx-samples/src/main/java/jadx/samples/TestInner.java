@@ -43,12 +43,7 @@ public class TestInner extends AbstractTest {
 	}
 
 	public void func() {
-		new Runnable() {
-			@Override
-			public void run() {
-				count += 4;
-			}
-		}.run();
+		((Runnable) () -> count += 4).run();
 	}
 
 	public void func2() {
@@ -92,12 +87,7 @@ public class TestInner extends AbstractTest {
 		c.func();
 		c.func2();
 
-		Runnable myRunnable = new Runnable() {
-			@Override
-			public void run() {
-				TestInner.count += 8;
-			}
-		};
+		Runnable myRunnable = () -> TestInner.count += 8;
 		myRunnable.run();
 
 		MyThread thread = new TestInner.MyThread("my thread");

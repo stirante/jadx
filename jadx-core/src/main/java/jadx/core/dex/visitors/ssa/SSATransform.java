@@ -69,7 +69,7 @@ public class SSATransform extends AbstractVisitor {
 		int blocksCount = blocks.size();
 		BitSet hasPhi = new BitSet(blocksCount);
 		BitSet processed = new BitSet(blocksCount);
-		Deque<BlockNode> workList = new LinkedList<BlockNode>();
+		Deque<BlockNode> workList = new LinkedList<>();
 
 		BitSet assignBlocks = la.getAssignBlocks(regNum);
 		for (int id = assignBlocks.nextSetBit(0); id >= 0; id = assignBlocks.nextSetBit(id + 1)) {
@@ -116,9 +116,9 @@ public class SSATransform extends AbstractVisitor {
 	}
 
 	private static void renameVariables(MethodNode mth) {
-		if (!mth.getSVars().isEmpty()) {
-			throw new JadxRuntimeException("SSA rename variables already executed");
-		}
+//		if (!mth.getSVars().isEmpty()) {
+//			throw new JadxRuntimeException("SSA rename variables already executed");
+//		}
 		int regsCount = mth.getRegsCount();
 		SSAVar[] vars = new SSAVar[regsCount];
 		int[] versions = new int[regsCount];
@@ -256,7 +256,7 @@ public class SSATransform extends AbstractVisitor {
 
 	private static boolean fixUselessPhi(MethodNode mth) {
 		boolean changed = false;
-		List<PhiInsn> insnToRemove = new ArrayList<PhiInsn>();
+		List<PhiInsn> insnToRemove = new ArrayList<>();
 		for (SSAVar var : mth.getSVars()) {
 			// phi result not used
 			if (var.getUseCount() == 0) {
@@ -286,22 +286,19 @@ public class SSATransform extends AbstractVisitor {
 	}
 
 	private static boolean fixPhiWithSameArgs(MethodNode mth, BlockNode block, PhiInsn phi) {
-		if (phi.getArgsCount() == 0) {
-			for (RegisterArg useArg : phi.getResult().getSVar().getUseList()) {
-				InsnNode useInsn = useArg.getParentInsn();
-				if (useInsn != null && useInsn.getType() == InsnType.PHI) {
-					phi.removeArg(useArg);
-				}
-			}
-			InstructionRemover.remove(mth, block, phi);
-			return true;
-		}
-		boolean allSame = phi.getArgsCount() == 1 || isSameArgs(phi);
-		if (!allSame) {
-			return false;
-		}
-		return replacePhiWithMove(mth, block, phi, phi.getArg(0));
-	}
+        if (phi.getArgsCount() == 0) {
+            for (RegisterArg useArg : phi.getResult().getSVar().getUseList()) {
+                InsnNode useInsn = useArg.getParentInsn();
+                if (useInsn != null && useInsn.getType() == InsnType.PHI) {
+                    phi.removeArg(useArg);
+                }
+            }
+            InstructionRemover.remove(mth, block, phi);
+            return true;
+        }
+        boolean allSame = phi.getArgsCount() == 1 || isSameArgs(phi);
+        return allSame && replacePhiWithMove(mth, block, phi, phi.getArg(0));
+    }
 
 	private static boolean isSameArgs(PhiInsn phi) {
 		boolean allSame = true;
@@ -385,7 +382,7 @@ public class SSATransform extends AbstractVisitor {
 			return false;
 		}
 		List<RegisterArg> useList = resVar.getUseList();
-		for (RegisterArg useArg : new ArrayList<RegisterArg>(useList)) {
+		for (RegisterArg useArg : new ArrayList<>(useList)) {
 			InsnNode useInsn = useArg.getParentInsn();
 			if (useInsn == null || useInsn == phi) {
 				return false;

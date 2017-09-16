@@ -17,7 +17,7 @@ public class TestTypeResolver2 extends AbstractTest {
 			doPrint(s1);
 			doPrint(s2);
 			s1 = "is";
-			s2 = new Integer(42);
+			s2 = 42;
 		}
 	}
 

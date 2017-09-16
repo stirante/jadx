@@ -48,17 +48,14 @@ public class TypeImmutableArg extends RegisterArg {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof TypeImmutableArg)) {
-			return false;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		return isThis == ((TypeImmutableArg) obj).isThis;
-	}
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof TypeImmutableArg)) {
+            return false;
+        }
+        return super.equals(obj) && isThis == ((TypeImmutableArg) obj).isThis;
+    }
 
 	@Override
 	public int hashCode() {

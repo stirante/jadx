@@ -28,7 +28,7 @@ public class TestRFieldRestore2 extends IntegrationTest {
 		// unknown id.Button
 		disableCompilation();
 
-		Map<Integer, String> map = new HashMap<Integer, String>();
+		Map<Integer, String> map = new HashMap<>();
 		map.put(2131230730, "id.Button");
 		setResMap(map);
 

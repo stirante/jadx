@@ -33,7 +33,7 @@ public class ManifestAttributes {
 
 	private static class MAttr {
 		private final MAttrType type;
-		private final Map<Long, String> values = new LinkedHashMap<Long, String>();
+		private final Map<Long, String> values = new LinkedHashMap<>();
 
 		public MAttr(MAttrType type) {
 			this.type = type;
@@ -53,7 +53,7 @@ public class ManifestAttributes {
 		}
 	}
 
-	private final Map<String, MAttr> attrMap = new HashMap<String, MAttr>();
+	private final Map<String, MAttr> attrMap = new HashMap<>();
 
 	public ManifestAttributes() throws Exception {
 	}

@@ -18,12 +18,12 @@ public class JPackage extends JNode implements Comparable<JPackage> {
 
 	private String name;
 	private final List<JClass> classes;
-	private final List<JPackage> innerPackages = new ArrayList<JPackage>(1);
+	private final List<JPackage> innerPackages = new ArrayList<>(1);
 
 	public JPackage(JavaPackage pkg) {
 		this.name = pkg.getName();
 		List<JavaClass> javaClasses = pkg.getClasses();
-		this.classes = new ArrayList<JClass>(javaClasses.size());
+		this.classes = new ArrayList<>(javaClasses.size());
 		for (JavaClass javaClass : javaClasses) {
 			classes.add(new JClass(javaClass));
 		}
@@ -32,7 +32,7 @@ public class JPackage extends JNode implements Comparable<JPackage> {
 
 	public JPackage(String name) {
 		this.name = name;
-		this.classes = new ArrayList<JClass>(1);
+		this.classes = new ArrayList<>(1);
 	}
 
 	public final void update() {
@@ -86,14 +86,11 @@ public class JPackage extends JNode implements Comparable<JPackage> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		return name.equals(((JPackage) o).name);
-	}
+        if (this == o) {
+            return true;
+        }
+        return o != null && getClass() == o.getClass() && name.equals(((JPackage) o).name);
+    }
 
 	@Override
 	public int hashCode() {

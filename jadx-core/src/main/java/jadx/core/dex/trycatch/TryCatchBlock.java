@@ -23,8 +23,8 @@ public class TryCatchBlock {
 	private final CatchAttr attr;
 
 	public TryCatchBlock() {
-		handlers = new LinkedList<ExceptionHandler>();
-		insns = new ArrayList<InsnNode>();
+		handlers = new LinkedList<>();
+		insns = new ArrayList<>();
 		attr = new CatchAttr(this);
 	}
 

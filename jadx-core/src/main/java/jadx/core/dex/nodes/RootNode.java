@@ -48,7 +48,7 @@ public class RootNode {
 	}
 
 	public void load(List<InputFile> inputFiles) throws DecodeException {
-		dexNodes = new ArrayList<DexNode>();
+		dexNodes = new ArrayList<>();
 		for (InputFile input : inputFiles) {
 			for (DexFile dexFile : input.getDexFiles()) {
 				try {
@@ -80,13 +80,10 @@ public class RootNode {
 		}
 		final ResTableParser parser = new ResTableParser();
 		try {
-			ResourcesLoader.decodeStream(arsc, new ResourcesLoader.ResourceDecoder() {
-				@Override
-				public ResContainer decode(long size, InputStream is) throws IOException {
-					parser.decode(is);
-					return null;
-				}
-			});
+			ResourcesLoader.decodeStream(arsc, (size, is) -> {
+                parser.decode(is);
+                return null;
+            });
 		} catch (JadxException e) {
 			LOG.error("Failed to parse '.arsc' file", e);
 			return;
@@ -107,7 +104,7 @@ public class RootNode {
 				ClspGraph clsp = new ClspGraph();
 				clsp.load();
 
-				List<ClassNode> classes = new ArrayList<ClassNode>();
+				List<ClassNode> classes = new ArrayList<>();
 				for (DexNode dexNode : dexNodes) {
 					classes.addAll(dexNode.getClasses());
 				}
@@ -127,7 +124,7 @@ public class RootNode {
 	}
 
 	public List<ClassNode> getClasses(boolean includeInner) {
-		List<ClassNode> classes = new ArrayList<ClassNode>();
+		List<ClassNode> classes = new ArrayList<>();
 		for (DexNode dex : dexNodes) {
 			if (includeInner) {
 				classes.addAll(dex.getClasses());
@@ -154,7 +151,7 @@ public class RootNode {
 	}
 
 	public List<ClassNode> searchClassByShortName(String shortName) {
-		List<ClassNode> list = new ArrayList<ClassNode>();
+		List<ClassNode> list = new ArrayList<>();
 		for (DexNode dexNode : dexNodes) {
 			for (ClassNode cls : dexNode.getClasses()) {
 				if (cls.getClassInfo().getShortName().equals(shortName)) {

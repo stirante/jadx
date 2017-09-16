@@ -308,13 +308,7 @@ public class IfMakerHelper {
 	}
 
 	private static boolean canSelectNext(IfInfo info, BlockNode block) {
-		if (block.getPredecessors().size() == 1) {
-			return true;
-		}
-		if (info.getMergedBlocks().containsAll(block.getPredecessors())) {
-			return true;
-		}
-		return false;
+		return block.getPredecessors().size() == 1 || info.getMergedBlocks().containsAll(block.getPredecessors());
 	}
 
 	private static BlockNode getNextIfNode(BlockNode block) {

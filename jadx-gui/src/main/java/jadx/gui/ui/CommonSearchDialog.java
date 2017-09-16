@@ -88,12 +88,7 @@ public abstract class CommonSearchDialog extends JDialog {
 
 	protected void initCommon() {
 		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-		getRootPane().registerKeyboardAction(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		getRootPane().registerKeyboardAction(e -> dispose(), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	@NotNull
@@ -101,17 +96,9 @@ public abstract class CommonSearchDialog extends JDialog {
 		progressPane = new ProgressPanel(mainWindow, false);
 
 		JButton cancelButton = new JButton(NLS.str("search_dialog.cancel"));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				dispose();
-			}
-		});
+		cancelButton.addActionListener(event -> dispose());
 		JButton openBtn = new JButton(NLS.str("search_dialog.open"));
-		openBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				openSelectedItem();
-			}
-		});
+		openBtn.addActionListener(event -> openSelectedItem());
 		getRootPane().setDefaultButton(openBtn);
 
 		JPanel buttonPane = new JPanel();
@@ -226,7 +213,7 @@ public abstract class CommonSearchDialog extends JDialog {
 		private static final long serialVersionUID = -7821286846923903208L;
 		private static final String[] COLUMN_NAMES = {"Node", "Code"};
 
-		private final List<JNode> rows = new ArrayList<JNode>();
+		private final List<JNode> rows = new ArrayList<>();
 		private final ResultsTableCellRenderer renderer;
 		private boolean addDescColumn;
 
@@ -292,7 +279,7 @@ public abstract class CommonSearchDialog extends JDialog {
 
 		private final JLabel emptyLabel = new JLabel();
 
-		private Map<Integer, Component> componentCache = new HashMap<Integer, Component>();
+		private Map<Integer, Component> componentCache = new HashMap<>();
 
 		public ResultsTableCellRenderer() {
 			UIDefaults defaults = UIManager.getDefaults();

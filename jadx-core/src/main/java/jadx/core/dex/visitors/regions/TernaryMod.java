@@ -160,7 +160,7 @@ public class TernaryMod {
 		if (tPhi == null || ePhi == null || tPhi != ePhi) {
 			return false;
 		}
-		Map<Integer, Integer> map = new HashMap<Integer, Integer>(tPhi.getArgsCount());
+		Map<Integer, Integer> map = new HashMap<>(tPhi.getArgsCount());
 		for (InsnArg arg : tPhi.getArguments()) {
 			if (!arg.isRegister()) {
 				continue;
@@ -171,12 +171,7 @@ public class TernaryMod {
 			}
 			int sourceLine = assignInsn.getSourceLine();
 			if (sourceLine != 0) {
-				Integer count = map.get(sourceLine);
-				if (count != null) {
-					map.put(sourceLine, count + 1);
-				} else {
-					map.put(sourceLine, 1);
-				}
+                map.merge(sourceLine, 1, (a, b) -> a + b);
 			}
 		}
 		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {

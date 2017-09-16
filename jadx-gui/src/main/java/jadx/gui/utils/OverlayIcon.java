@@ -10,7 +10,7 @@ import java.util.List;
 public class OverlayIcon implements Icon {
 
 	private final Icon icon;
-	private final List<Icon> icons = new ArrayList<Icon>(4);
+	private final List<Icon> icons = new ArrayList<>(4);
 
 	private static final double A = 0.8;
 	private static final double B = 0.2;

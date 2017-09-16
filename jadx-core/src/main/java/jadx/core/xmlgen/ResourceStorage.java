@@ -13,14 +13,9 @@ import java.util.Map;
 
 public class ResourceStorage {
 
-	private static final Comparator<ResourceEntry> COMPARATOR = new Comparator<ResourceEntry>() {
-		@Override
-		public int compare(ResourceEntry a, ResourceEntry b) {
-			return Utils.compare(a.getId(), b.getId());
-		}
-	};
+	private static final Comparator<ResourceEntry> COMPARATOR = (a, b) -> Utils.compare(a.getId(), b.getId());
 
-	private final List<ResourceEntry> list = new ArrayList<ResourceEntry>();
+	private final List<ResourceEntry> list = new ArrayList<>();
 	private String appPackage;
 
 	public Collection<ResourceEntry> getResources() {
@@ -32,7 +27,7 @@ public class ResourceStorage {
 	}
 
 	public void finish() {
-		Collections.sort(list, COMPARATOR);
+		list.sort(COMPARATOR);
 	}
 
 	public ResourceEntry getByRef(int refId) {
@@ -53,7 +48,7 @@ public class ResourceStorage {
 	}
 
 	public Map<Integer, String> getResourcesNames() {
-		Map<Integer, String> map = new HashMap<Integer, String>();
+		Map<Integer, String> map = new HashMap<>();
 		for (ResourceEntry entry : list) {
 			map.put(entry.getId(), entry.getTypeName() + "/" + entry.getKeyName());
 		}

@@ -14,11 +14,7 @@ public class TestAnonymousClass6 extends IntegrationTest {
 
 	public static class TestCls {
 		public Runnable test(final double d) {
-			return new Runnable() {
-				public void run() {
-					System.out.println(d);
-				}
-			};
+			return () -> System.out.println(d);
 		}
 	}
 

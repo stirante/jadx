@@ -31,11 +31,11 @@ public class TestInvoke extends AbstractTest {
 	}
 
 	private String testVarArgs2(char[]... args) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (char[] ca : args) {
-			s += new String(ca);
+			s.append(new String(ca));
 		}
-		return s;
+		return s.toString();
 	}
 
 	private String testSameArgTypes(String s1, String s2) {

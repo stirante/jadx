@@ -7,9 +7,9 @@ public class TestCF2 extends AbstractTest {
 	public int simple_loops() throws InterruptedException {
 		int[] a = new int[]{1, 2, 4, 6, 8};
 		int b = 0;
-		for (int i = 0; i < a.length; i++) {
-			b += a[i];
-		}
+        for (int anA : a) {
+            b += anA;
+        }
 		for (long i = b; i > 0; i--) {
 			b += i;
 		}

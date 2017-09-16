@@ -53,7 +53,7 @@ public class Jadx {
 	}
 
 	public static List<IDexTreeVisitor> getPassesList(IJadxArgs args, File outDir) {
-		List<IDexTreeVisitor> passes = new ArrayList<IDexTreeVisitor>();
+		List<IDexTreeVisitor> passes = new ArrayList<>();
 		if (args.isFallbackMode()) {
 			passes.add(new FallbackModeVisitor());
 		} else {

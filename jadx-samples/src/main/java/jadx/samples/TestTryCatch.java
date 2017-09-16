@@ -43,11 +43,7 @@ public class TestTryCatch extends AbstractTest {
 		try {
 			return exc(obj);
 		} catch (Exception e) {
-			if (obj != null) {
-				return true;
-			} else {
-				return false;
-			}
+            return obj != null;
 		}
 	}
 

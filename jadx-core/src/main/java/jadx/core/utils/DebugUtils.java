@@ -47,7 +47,7 @@ public class DebugUtils {
 	}
 
 	public static void printRegionsWithBlock(MethodNode mth, final BlockNode block) {
-		final Set<IRegion> regions = new LinkedHashSet<IRegion>();
+		final Set<IRegion> regions = new LinkedHashSet<>();
 		DepthRegionTraversal.traverse(mth, new TracedRegionVisitor() {
 			@Override
 			public void processBlockTraced(MethodNode mth, IBlock container, IRegion currentRegion) {
@@ -136,7 +136,7 @@ public class DebugUtils {
 
 	private static void checkPHI(MethodNode mth) {
 		for (BlockNode block : mth.getBasicBlocks()) {
-			List<PhiInsn> phis = new ArrayList<PhiInsn>();
+			List<PhiInsn> phis = new ArrayList<>();
 			for (InsnNode insn : block.getInstructions()) {
 				if (insn.getType() == InsnType.PHI) {
 					PhiInsn phi = (PhiInsn) insn;

@@ -120,11 +120,7 @@ public class TextStandardActions {
 				}
 			}
 		});
-		textComponent.getDocument().addUndoableEditListener(new UndoableEditListener() {
-			public void undoableEditHappened(UndoableEditEvent event) {
-				undoManager.addEdit(event.getEdit());
-			}
-		});
+		textComponent.getDocument().addUndoableEditListener(event -> undoManager.addEdit(event.getEdit()));
 	}
 
 	private void process(MouseEvent e) {

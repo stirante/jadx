@@ -23,12 +23,10 @@ public class JadxGUI {
 				return;
 			}
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					MainWindow window = new MainWindow(jadxArgs);
-					window.open();
-				}
-			});
+			SwingUtilities.invokeLater(() -> {
+                MainWindow window = new MainWindow(jadxArgs);
+                window.open();
+            });
 		} catch (Throwable e) {
 			LOG.error("Error: {}", e.getMessage(), e);
 			System.exit(1);

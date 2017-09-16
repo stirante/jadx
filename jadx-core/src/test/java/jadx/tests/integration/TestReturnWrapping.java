@@ -27,7 +27,7 @@ public class TestReturnWrapping extends IntegrationTest {
 			} else {
 				i++;
 				try {
-					ret = new Object().getClass();
+					ret = Object.class;
 				} catch (Exception e) {
 					ret = "Qwerty";
 				}

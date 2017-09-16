@@ -21,10 +21,10 @@ public class ExportGradleProject {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExportGradleProject.class);
 
-	private static final Set<String> IGNORE_CLS_NAMES = new HashSet<String>(Arrays.asList(
-			"R",
-			"BuildConfig"
-	));
+	private static final Set<String> IGNORE_CLS_NAMES = new HashSet<>(Arrays.asList(
+            "R",
+            "BuildConfig"
+    ));
 
 	private final RootNode root;
 	private final File outDir;

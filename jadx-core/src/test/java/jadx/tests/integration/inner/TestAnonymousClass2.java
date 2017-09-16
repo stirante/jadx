@@ -16,21 +16,13 @@ public class TestAnonymousClass2 extends IntegrationTest {
 			private int f;
 
 			public Runnable test() {
-				return new Runnable() {
-					@Override
-					public void run() {
-						f = 1;
-					}
-				};
+				return () -> f = 1;
 			}
 
 			public Runnable test2() {
-				return new Runnable() {
-					@Override
-					public void run() {
-						Object obj = Inner.this;
-					}
-				};
+				return () -> {
+                    Object obj = Inner.this;
+                };
 			}
 			/*
 			public Runnable test3() {

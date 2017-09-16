@@ -9,7 +9,7 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 
 public class CodeLinesInfo {
-	private NavigableMap<Integer, JavaNode> map = new TreeMap<Integer, JavaNode>();
+	private NavigableMap<Integer, JavaNode> map = new TreeMap<>();
 
 	public CodeLinesInfo(JavaClass cls) {
 		addClass(cls);

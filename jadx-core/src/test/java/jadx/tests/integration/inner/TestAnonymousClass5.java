@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 public class TestAnonymousClass5 extends IntegrationTest {
 
 	public static class TestCls {
-		private final Map<String, TestCls> map = new HashMap<String, TestCls>();
+		private final Map<String, TestCls> map = new HashMap<>();
 		private int a;
 
 		public Iterable<TestCls> test(String name) {
@@ -48,12 +48,7 @@ public class TestAnonymousClass5 extends IntegrationTest {
 					throw new UnsupportedOperationException();
 				}
 			};
-			return new Iterable<TestCls>() {
-				@Override
-				public Iterator<TestCls> iterator() {
-					return iterator;
-				}
-			};
+			return () -> iterator;
 		}
 
 		private int size() {

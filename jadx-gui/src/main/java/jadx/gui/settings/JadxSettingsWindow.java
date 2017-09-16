@@ -49,39 +49,33 @@ public class JadxSettingsWindow extends JDialog {
         panel.add(makeOtherGroup());
 
         JButton saveBtn = new JButton(NLS.str("preferences.save"));
-        saveBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                settings.sync();
-                if (needReload) {
-                    mainWindow.reOpenFile();
-                }
-                dispose();
+        saveBtn.addActionListener(event -> {
+            settings.sync();
+            if (needReload) {
+                mainWindow.reOpenFile();
             }
+            dispose();
         });
         JButton cancelButton = new JButton(NLS.str("preferences.cancel"));
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                JadxSettingsAdapter.fill(settings, startSettings);
-                dispose();
-            }
+        cancelButton.addActionListener(event -> {
+            JadxSettingsAdapter.fill(settings, startSettings);
+            dispose();
         });
 
         JButton resetBtn = new JButton(NLS.str("preferences.reset"));
-        resetBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                int res = JOptionPane.showConfirmDialog(
-                        JadxSettingsWindow.this,
-                        NLS.str("preferences.reset_message"),
-                        NLS.str("preferences.reset_title"),
-                        JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    String defaults = JadxSettingsAdapter.makeString(new JadxSettings());
-                    JadxSettingsAdapter.fill(settings, defaults);
-                    getContentPane().removeAll();
-                    initUI();
-                    pack();
-                    repaint();
-                }
+        resetBtn.addActionListener(event -> {
+            int res = JOptionPane.showConfirmDialog(
+                    JadxSettingsWindow.this,
+                    NLS.str("preferences.reset_message"),
+                    NLS.str("preferences.reset_title"),
+                    JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+                String defaults = JadxSettingsAdapter.makeString(new JadxSettings());
+                JadxSettingsAdapter.fill(settings, defaults);
+                getContentPane().removeAll();
+                initUI();
+                pack();
+                repaint();
             }
         });
 
@@ -103,49 +97,37 @@ public class JadxSettingsWindow extends JDialog {
     private SettingsGroup makeDeobfuscationGroup() {
         JCheckBox deobfOn = new JCheckBox();
         deobfOn.setSelected(settings.isDeobfuscationOn());
-        deobfOn.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setDeobfuscationOn(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        deobfOn.addItemListener(e -> {
+            settings.setDeobfuscationOn(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         JCheckBox deobfForce = new JCheckBox();
         deobfForce.setSelected(settings.isDeobfuscationForceSave());
-        deobfForce.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setDeobfuscationForceSave(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        deobfForce.addItemListener(e -> {
+            settings.setDeobfuscationForceSave(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         final JSpinner minLen = new JSpinner();
         minLen.setValue(settings.getDeobfuscationMinLength());
-        minLen.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                settings.setDeobfuscationMinLength((Integer) minLen.getValue());
-                needReload();
-            }
+        minLen.addChangeListener(e -> {
+            settings.setDeobfuscationMinLength((Integer) minLen.getValue());
+            needReload();
         });
 
         final JSpinner maxLen = new JSpinner();
         maxLen.setValue(settings.getDeobfuscationMaxLength());
-        maxLen.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                settings.setDeobfuscationMaxLength((Integer) maxLen.getValue());
-                needReload();
-            }
+        maxLen.addChangeListener(e -> {
+            settings.setDeobfuscationMaxLength((Integer) maxLen.getValue());
+            needReload();
         });
 
         JCheckBox deobfSourceAlias = new JCheckBox();
         deobfSourceAlias.setSelected(settings.useSourceNameAsClassAlias());
-        deobfSourceAlias.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setUseSourceNameAsClassAlias(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        deobfSourceAlias.addItemListener(e -> {
+            settings.setUseSourceNameAsClassAlias(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         SettingsGroup deobfGroup = new SettingsGroup(NLS.str("preferences.deobfuscation"));
@@ -183,64 +165,45 @@ public class JadxSettingsWindow extends JDialog {
     private SettingsGroup makeDecompilationGroup() {
         JCheckBox fallback = new JCheckBox();
         fallback.setSelected(settings.isFallbackMode());
-        fallback.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setFallbackMode(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        fallback.addItemListener(e -> {
+            settings.setFallbackMode(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         JCheckBox showInconsistentCode = new JCheckBox();
         showInconsistentCode.setSelected(settings.isShowInconsistentCode());
-        showInconsistentCode.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setShowInconsistentCode(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        showInconsistentCode.addItemListener(e -> {
+            settings.setShowInconsistentCode(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         JCheckBox resourceDecode = new JCheckBox();
         resourceDecode.setSelected(settings.isSkipResources());
-        resourceDecode.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setSkipResources(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        resourceDecode.addItemListener(e -> {
+            settings.setSkipResources(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         final JSpinner threadsCount = new JSpinner();
         threadsCount.setValue(settings.getThreadsCount());
-        threadsCount.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                settings.setThreadsCount((Integer) threadsCount.getValue());
-            }
-        });
+        threadsCount.addChangeListener(e -> settings.setThreadsCount((Integer) threadsCount.getValue()));
 
         JCheckBox autoStartJobs = new JCheckBox();
         autoStartJobs.setSelected(settings.isAutoStartJobs());
-        autoStartJobs.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setAutoStartJobs(e.getStateChange() == ItemEvent.SELECTED);
-            }
-        });
+        autoStartJobs.addItemListener(e -> settings.setAutoStartJobs(e.getStateChange() == ItemEvent.SELECTED));
 
         JCheckBox escapeUnicode = new JCheckBox();
         escapeUnicode.setSelected(settings.escapeUnicode());
-        escapeUnicode.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setEscapeUnicode(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        escapeUnicode.addItemListener(e -> {
+            settings.setEscapeUnicode(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         JCheckBox replaceConsts = new JCheckBox();
         replaceConsts.setSelected(settings.isReplaceConsts());
-        replaceConsts.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setReplaceConsts(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        replaceConsts.addItemListener(e -> {
+            settings.setReplaceConsts(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         SettingsGroup other = new SettingsGroup(NLS.str("preferences.decompile"));
@@ -257,37 +220,27 @@ public class JadxSettingsWindow extends JDialog {
     private SettingsGroup makeOtherGroup() {
         JCheckBox update = new JCheckBox();
         update.setSelected(settings.isCheckForUpdates());
-        update.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setCheckForUpdates(e.getStateChange() == ItemEvent.SELECTED);
-            }
-        });
+        update.addItemListener(e -> settings.setCheckForUpdates(e.getStateChange() == ItemEvent.SELECTED));
 
         JCheckBox cfg = new JCheckBox();
         cfg.setSelected(settings.isCFGOutput());
-        cfg.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setCfgOutput(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        cfg.addItemListener(e -> {
+            settings.setCfgOutput(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         JCheckBox rawCfg = new JCheckBox();
         rawCfg.setSelected(settings.isRawCFGOutput());
-        rawCfg.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setRawCfgOutput(e.getStateChange() == ItemEvent.SELECTED);
-                needReload();
-            }
+        rawCfg.addItemListener(e -> {
+            settings.setRawCfgOutput(e.getStateChange() == ItemEvent.SELECTED);
+            needReload();
         });
 
         JCheckBox moreResults = new JCheckBox();
         moreResults.setSelected(settings.isMoreResults());
-        moreResults.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                settings.setMoreResults(e.getStateChange() == ItemEvent.SELECTED);
-                CommonSearchDialog.MAX_RESULTS_COUNT = 100 * (settings.isMoreResults() ? 100 : 1);
-            }
+        moreResults.addItemListener(e -> {
+            settings.setMoreResults(e.getStateChange() == ItemEvent.SELECTED);
+            CommonSearchDialog.MAX_RESULTS_COUNT = 100 * (settings.isMoreResults() ? 100 : 1);
         });
 
         SettingsGroup other = new SettingsGroup(NLS.str("preferences.other"));

@@ -14,25 +14,25 @@ public class TestSwitchBreak extends IntegrationTest {
 
 	public static class TestCls {
 		public String test(int a) {
-			String s = "";
+			StringBuilder s = new StringBuilder();
 			loop:
 			while (a > 0) {
 				switch (a % 4) {
 					case 1:
-						s += "1";
+						s.append("1");
 						break;
 					case 3:
 					case 4:
-						s += "4";
+						s.append("4");
 						break;
 					case 5:
-						s += "+";
+						s.append("+");
 						break loop;
 				}
-				s += "-";
+				s.append("-");
 				a--;
 			}
-			return s;
+			return s.toString();
 		}
 	}
 

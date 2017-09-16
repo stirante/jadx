@@ -17,12 +17,7 @@ public class TestAnonymousClass extends IntegrationTest {
 	public static class TestCls {
 
 		public int test() {
-			String[] files = new File("a").list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.equals("a");
-				}
-			});
+			String[] files = new File("a").list((dir, name) -> name.equals("a"));
 			return files.length;
 		}
 	}

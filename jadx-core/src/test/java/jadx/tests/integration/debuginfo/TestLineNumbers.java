@@ -28,11 +28,8 @@ public class TestLineNumbers extends IntegrationTest {
 			}
 
 			public void innerFunc2() {
-				new Runnable() {
-					@Override
-					public void run() {
-					}
-				}.run();
+				((Runnable) () -> {
+                }).run();
 			}
 
 			public void innerFunc3() {

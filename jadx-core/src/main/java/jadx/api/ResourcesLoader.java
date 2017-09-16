@@ -39,7 +39,7 @@ public final class ResourcesLoader {
 	}
 
 	List<ResourceFile> load(List<InputFile> inputFiles) {
-		List<ResourceFile> list = new ArrayList<ResourceFile>(inputFiles.size());
+		List<ResourceFile> list = new ArrayList<>(inputFiles.size());
 		for (InputFile file : inputFiles) {
 			loadFile(list, file.getFile());
 		}
@@ -83,12 +83,7 @@ public final class ResourcesLoader {
 
 	static ResContainer loadContent(final JadxDecompiler jadxRef, final ResourceFile rf) {
 		try {
-			return decodeStream(rf, new ResourceDecoder() {
-				@Override
-				public ResContainer decode(long size, InputStream is) throws IOException {
-					return loadContent(jadxRef, rf, is, size);
-				}
-			});
+			return decodeStream(rf, (size, is) -> loadContent(jadxRef, rf, is, size));
 		} catch (JadxException e) {
 			LOG.error("Decode error", e);
 			CodeWriter cw = new CodeWriter();

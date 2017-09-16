@@ -16,7 +16,7 @@ public class TestIssue13a extends IntegrationTest {
 	public static class TestCls {
 		private static final String TAG = "Parcel";
 		private static final HashMap<ClassLoader, HashMap<String, Parcelable.Creator<?>>>
-				mCreators = new HashMap<ClassLoader, HashMap<String, Parcelable.Creator<?>>>();
+				mCreators = new HashMap<>();
 
 		@SuppressWarnings("unchecked")
 		public final <T extends Parcelable> T test(ClassLoader loader) {
@@ -26,12 +26,8 @@ public class TestIssue13a extends IntegrationTest {
 			}
 			Parcelable.Creator<T> creator;
 			synchronized (mCreators) {
-				HashMap<String, Parcelable.Creator<?>> map = mCreators.get(loader);
-				if (map == null) {
-					map = new HashMap<String, Parcelable.Creator<?>>();
-					mCreators.put(loader, map);
-				}
-				creator = (Parcelable.Creator<T>) map.get(name);
+                HashMap<String, Parcelable.Creator<?>> map = mCreators.computeIfAbsent(loader, k -> new HashMap<String, Parcelable.Creator<?>>());
+                creator = (Parcelable.Creator<T>) map.get(name);
 				if (creator == null) {
 					try {
 						Class<?> c = loader == null ?

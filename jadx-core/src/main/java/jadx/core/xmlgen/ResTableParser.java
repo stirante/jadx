@@ -211,7 +211,7 @@ public class ResTableParser extends CommonBinaryParser {
 			int parentRef = is.readInt32();
 			ri.setParentRef(parentRef);
 			int count = is.readInt32();
-			List<RawNamedValue> values = new ArrayList<RawNamedValue>(count);
+			List<RawNamedValue> values = new ArrayList<>(count);
 			for (int i = 0; i < count; i++) {
 				values.add(parseValueMap());
 			}

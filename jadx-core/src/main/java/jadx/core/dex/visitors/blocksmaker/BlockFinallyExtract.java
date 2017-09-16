@@ -93,7 +93,7 @@ public class BlockFinallyExtract extends AbstractVisitor {
 	private static boolean extractFinally(MethodNode mth, ExceptionHandler handler) {
 		int count = handler.getBlocks().size();
 		BitSet bs = new BitSet(count);
-		List<BlockNode> blocks = new ArrayList<BlockNode>(count);
+		List<BlockNode> blocks = new ArrayList<>(count);
 		for (BlockNode block : handler.getBlocks()) {
 			List<InsnNode> insns = block.getInstructions();
 			if (!insns.isEmpty()) {
@@ -108,8 +108,8 @@ public class BlockFinallyExtract extends AbstractVisitor {
 			return false;
 		}
 
-		List<BlocksRemoveInfo> removes = new LinkedList<BlocksRemoveInfo>();
-		Set<BlockNode> splitters = new HashSet<BlockNode>();
+		List<BlocksRemoveInfo> removes = new LinkedList<>();
+		Set<BlockNode> splitters = new HashSet<>();
 
 		// remove 'finally' from handlers
 		TryCatchBlock tryBlock = handler.getTryBlock();
@@ -308,7 +308,7 @@ public class BlockFinallyExtract extends AbstractVisitor {
 	}
 
 	private static boolean mergeReturns(MethodNode mth, Set<BlocksPair> outs) {
-		Set<BlockNode> rightOuts = new HashSet<BlockNode>();
+		Set<BlockNode> rightOuts = new HashSet<>();
 		boolean allReturns = true;
 		for (BlocksPair outPair : outs) {
 			BlockNode first = outPair.getFirst();
@@ -541,7 +541,7 @@ public class BlockFinallyExtract extends AbstractVisitor {
 		if (filtPreds.size() > 1) {
 			BlockNode pred = sOut.getPredecessors().get(0);
 			BlockNode newPred = BlockSplitter.insertBlockBetween(mth, pred, sOut);
-			for (BlockNode predBlock : new ArrayList<BlockNode>(sOut.getPredecessors())) {
+			for (BlockNode predBlock : new ArrayList<>(sOut.getPredecessors())) {
 				if (predBlock != newPred) {
 					removeConnection(predBlock, sOut);
 					connect(predBlock, newPred);
@@ -566,7 +566,7 @@ public class BlockFinallyExtract extends AbstractVisitor {
 		}
 
 		// redirect input edges
-		for (BlockNode pred : new ArrayList<BlockNode>(remBlock.getPredecessors())) {
+		for (BlockNode pred : new ArrayList<>(remBlock.getPredecessors())) {
 			BlockNode middle = insertBlockBetween(mth, pred, remBlock);
 			removeConnection(middle, remBlock);
 			connect(middle, startBlock);
@@ -593,7 +593,7 @@ public class BlockFinallyExtract extends AbstractVisitor {
 		BlockNode newBlock = BlockSplitter.startNewBlock(mth, -1);
 
 		newBlock.getSuccessors().addAll(block.getSuccessors());
-		for (BlockNode s : new ArrayList<BlockNode>(block.getSuccessors())) {
+		for (BlockNode s : new ArrayList<>(block.getSuccessors())) {
 			removeConnection(block, s);
 			connect(newBlock, s);
 		}
@@ -609,13 +609,7 @@ public class BlockFinallyExtract extends AbstractVisitor {
 			insnNode.add(AFlag.SKIP);
 			newBlock.getInstructions().add(insnNode);
 		}
-		Iterator<InsnNode> it = insns.iterator();
-		while (it.hasNext()) {
-			InsnNode insnNode = it.next();
-			if (insnNode.contains(AFlag.SKIP)) {
-				it.remove();
-			}
-		}
+        insns.removeIf(insnNode -> insnNode.contains(AFlag.SKIP));
 		for (InsnNode insnNode : newBlock.getInstructions()) {
 			insnNode.remove(AFlag.SKIP);
 		}
@@ -684,7 +678,7 @@ public class BlockFinallyExtract extends AbstractVisitor {
 		if (edgeAttr == null) {
 			return;
 		}
-		List<BlockNode> merge = new LinkedList<BlockNode>();
+		List<BlockNode> merge = new LinkedList<>();
 		for (BlockNode blockNode : pred.getSuccessors()) {
 			if (blockNode.contains(AFlag.RETURN)) {
 				merge.add(blockNode);
@@ -718,14 +712,8 @@ public class BlockFinallyExtract extends AbstractVisitor {
 	}
 
 	private static void mergeSyntheticPredecessors(MethodNode mth, BlockNode block) {
-		List<BlockNode> preds = new ArrayList<BlockNode>(block.getPredecessors());
-		Iterator<BlockNode> it = preds.iterator();
-		while (it.hasNext()) {
-			BlockNode predBlock = it.next();
-			if (!predBlock.isSynthetic()) {
-				it.remove();
-			}
-		}
+		List<BlockNode> preds = new ArrayList<>(block.getPredecessors());
+        preds.removeIf(predBlock -> !predBlock.isSynthetic());
 		if (preds.size() < 2) {
 			return;
 		}

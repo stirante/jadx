@@ -13,7 +13,7 @@ public class TestGenerics extends AbstractTest {
 	public Class<?>[] classes;
 
 	public interface MyComparable<T> {
-		public int compareTo(T o);
+		int compareTo(T o);
 	}
 
 	public static class GenericClass implements MyComparable<String> {
@@ -35,12 +35,12 @@ public class TestGenerics extends AbstractTest {
 		}
 	}
 
-	public static Box<Integer> integerBox = new Box<Integer>();
+	public static Box<Integer> integerBox = new Box<>();
 
 	public interface Pair<K, LongGenericType> {
-		public K getKey();
+		K getKey();
 
-		public LongGenericType getValue();
+		LongGenericType getValue();
 	}
 
 	public static class OrderedPair<K, V> implements Pair<K, V> {
@@ -63,8 +63,8 @@ public class TestGenerics extends AbstractTest {
 		}
 	}
 
-	Pair<String, Integer> p1 = new OrderedPair<String, Integer>("8", 8);
-	OrderedPair<String, Box<Integer>> p = new OrderedPair<String, Box<Integer>>("primes", new Box<Integer>());
+	Pair<String, Integer> p1 = new OrderedPair<>("8", 8);
+	OrderedPair<String, Box<Integer>> p = new OrderedPair<>("primes", new Box<>());
 
 	public static class Util {
 		// Generic static method
@@ -75,9 +75,9 @@ public class TestGenerics extends AbstractTest {
 	}
 
 	public static boolean use() {
-		Pair<Integer, String> p1 = new OrderedPair<Integer, String>(1, "str1");
-		Pair<Integer, String> p2 = new OrderedPair<Integer, String>(2, "str2");
-		boolean same = Util.<Integer, String>compare(p1, p2);
+		Pair<Integer, String> p1 = new OrderedPair<>(1, "str1");
+		Pair<Integer, String> p2 = new OrderedPair<>(2, "str2");
+		boolean same = Util.compare(p1, p2);
 		return same;
 	}
 
@@ -168,7 +168,7 @@ public class TestGenerics extends AbstractTest {
 	}
 
 	private List<String> test1(Map<String, String> map) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		String str = map.get("key");
 		list.add(str);
 		return list;
@@ -185,7 +185,7 @@ public class TestGenerics extends AbstractTest {
 
 	@Override
 	public boolean testRun() throws Exception {
-		assertTrue(test1(new HashMap<String, String>()) != null);
+		assertTrue(test1(new HashMap<>()) != null);
 		// TODO: add other checks
 		return true;
 	}

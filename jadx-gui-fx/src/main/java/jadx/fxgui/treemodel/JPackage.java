@@ -17,7 +17,7 @@ public class JPackage extends JNode implements Comparable<JPackage> {
 
     private static final Image PACKAGE_ICON = Utils.openIcon("package_obj");
     private final List<JClass> classes;
-    private final List<JPackage> innerPackages = new ArrayList<JPackage>(1);
+    private final List<JPackage> innerPackages = new ArrayList<>(1);
     private String name;
 
     public JPackage(JavaPackage pkg) {
@@ -31,7 +31,7 @@ public class JPackage extends JNode implements Comparable<JPackage> {
 
     public JPackage(String name) {
         this.name = name;
-        this.classes = new ArrayList<JClass>(1);
+        this.classes = new ArrayList<>(1);
         init();
     }
 
@@ -90,10 +90,7 @@ public class JPackage extends JNode implements Comparable<JPackage> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        return name.equals(((JPackage) o).name);
+        return o != null && getClass() == o.getClass() && name.equals(((JPackage) o).name);
     }
 
     @Override

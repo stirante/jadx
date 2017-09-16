@@ -296,7 +296,7 @@ public abstract class IntegrationTest extends TestUtils {
 	}
 
 	private List<File> getClassFilesWithInners(Class<?> cls) {
-		List<File> list = new ArrayList<File>();
+		List<File> list = new ArrayList<>();
 		String pkgName = cls.getPackage().getName();
 		URL pkgResource = ClassLoader.getSystemClassLoader().getResource(pkgName.replace('.', '/'));
 		if (pkgResource != null) {
@@ -335,13 +335,7 @@ public abstract class IntegrationTest extends TestUtils {
 		outTmp.deleteOnExit();
 		List<File> files = StaticCompiler.compile(compileFileList, outTmp, withDebugInfo);
 		// remove classes which are parents for test class
-		Iterator<File> iterator = files.iterator();
-		while (iterator.hasNext()) {
-			File next = iterator.next();
-			if (!next.getName().contains(cls.getSimpleName())) {
-				iterator.remove();
-			}
-		}
+        files.removeIf(next -> !next.getName().contains(cls.getSimpleName()));
 		for (File clsFile : files) {
 			clsFile.deleteOnExit();
 		}

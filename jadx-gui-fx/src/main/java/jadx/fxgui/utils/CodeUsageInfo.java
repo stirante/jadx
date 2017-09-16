@@ -29,11 +29,7 @@ public class CodeUsageInfo {
 
     private void addUsage(JNode jNode, JavaClass javaClass,
                           CodeLinesInfo linesInfo, CodePosition codePosition, List<StringRef> lines) {
-        UsageInfo usageInfo = usageMap.get(jNode);
-        if (usageInfo == null) {
-            usageInfo = new UsageInfo();
-            usageMap.put(jNode, usageInfo);
-        }
+        UsageInfo usageInfo = usageMap.computeIfAbsent(jNode, k -> new UsageInfo());
         int line = codePosition.getLine();
         JavaNode javaNodeByLine = linesInfo.getJavaNodeByLine(line);
         StringRef codeLine = lines.get(line - 1);

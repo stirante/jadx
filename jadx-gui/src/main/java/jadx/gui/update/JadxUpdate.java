@@ -33,12 +33,7 @@ public class JadxUpdate {
 	private static final Type RELEASES_LIST_TYPE = new TypeToken<List<Release>>() {
 	}.getType();
 
-	private static final Comparator<Release> RELEASE_COMPARATOR = new Comparator<Release>() {
-		@Override
-		public int compare(Release o1, Release o2) {
-			return VersionComparator.checkAndCompare(o1.getName(), o2.getName());
-		}
-	};
+	private static final Comparator<Release> RELEASE_COMPARATOR = (o1, o2) -> VersionComparator.checkAndCompare(o1.getName(), o2.getName());
 
 	public interface IUpdateCallback {
 		void onUpdate(Release r);
@@ -48,19 +43,16 @@ public class JadxUpdate {
 	}
 
 	public static void check(final IUpdateCallback callback) {
-		Runnable run = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Release release = checkForNewRelease();
-					if (release != null) {
-						callback.onUpdate(release);
-					}
-				} catch (Exception e) {
-					LOG.debug("Jadx update error", e);
-				}
-			}
-		};
+		Runnable run = () -> {
+            try {
+                Release release = checkForNewRelease();
+                if (release != null) {
+                    callback.onUpdate(release);
+                }
+            } catch (Exception e) {
+                LOG.debug("Jadx update error", e);
+            }
+        };
 		Thread thread = new Thread(run);
 		thread.setName("Jadx update thread");
 		thread.setPriority(Thread.MIN_PRIORITY);
@@ -78,17 +70,12 @@ public class JadxUpdate {
 		if (list == null) {
 			return null;
 		}
-		for (Iterator<Release> it = list.iterator(); it.hasNext(); ) {
-			Release release = it.next();
-			if (release.getName().equalsIgnoreCase(version)
-					|| release.isPreRelease()) {
-				it.remove();
-			}
-		}
+        list.removeIf(release -> release.getName().equalsIgnoreCase(version)
+                || release.isPreRelease());
 		if (list.isEmpty()) {
 			return null;
 		}
-		Collections.sort(list, RELEASE_COMPARATOR);
+		list.sort(RELEASE_COMPARATOR);
 		Release latest = list.get(list.size() - 1);
 		if (VersionComparator.checkAndCompare(version, latest.getName()) >= 0) {
 			return null;

@@ -495,7 +495,7 @@ public abstract class ArgType {
 				return null;
 			} else {
 				// both types unknown
-				List<PrimitiveType> types = new ArrayList<PrimitiveType>();
+				List<PrimitiveType> types = new ArrayList<>();
 				for (PrimitiveType type : a.getPossibleTypes()) {
 					if (b.contains(type)) {
 						types.add(type);
@@ -568,24 +568,14 @@ public abstract class ArgType {
 	}
 
 	public static boolean isCastNeeded(DexNode dex, ArgType from, ArgType to) {
-		if (from.equals(to)) {
-			return false;
-		}
-		if (from.isObject() && to.isObject()
-				&& dex.root().getClsp().isImplements(from.getObject(), to.getObject())) {
-			return false;
-		}
-		return true;
+		return !from.equals(to) && (!from.isObject() || !to.isObject() || !dex.root().getClsp().isImplements(from.getObject(), to.getObject()));
 	}
 
 	public static boolean isInstanceOf(DexNode dex, ArgType type, ArgType of) {
 		if (type.equals(of)) {
 			return true;
 		}
-		if (!type.isObject() || !of.isObject()) {
-			return false;
-		}
-		return dex.root().getClsp().isImplements(type.getObject(), of.getObject());
+		return type.isObject() && of.isObject() && dex.root().getClsp().isImplements(type.getObject(), of.getObject());
 	}
 
 	public static ArgType parse(String type) {
@@ -664,9 +654,6 @@ public abstract class ArgType {
 		if (hash != obj.hashCode()) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		return internalEquals(obj);
+		return getClass() == obj.getClass() && internalEquals(obj);
 	}
 }

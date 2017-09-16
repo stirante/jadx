@@ -21,8 +21,7 @@ public class TestWrongCode extends IntegrationTest {
 		@SuppressWarnings("empty")
 		private int test2(int a) {
 			if (a == 0) {
-				;
-			}
+            }
 			return a;
 		}
 	}

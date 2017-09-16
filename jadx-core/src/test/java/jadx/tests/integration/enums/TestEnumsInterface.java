@@ -21,8 +21,8 @@ public class TestEnumsInterface extends IntegrationTest {
 				public int apply(int x, int y) {
 					return x - y;
 				}
-			};
-		}
+			}
+        }
 
 		public interface IOperation {
 			int apply(int x, int y);

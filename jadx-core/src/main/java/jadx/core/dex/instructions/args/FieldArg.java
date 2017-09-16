@@ -47,21 +47,15 @@ public final class FieldArg extends RegisterArg {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof FieldArg) || !super.equals(obj)) {
-			return false;
-		}
-		FieldArg fieldArg = (FieldArg) obj;
-		if (!field.equals(fieldArg.field)) {
-			return false;
-		}
-		if (instArg != null ? !instArg.equals(fieldArg.instArg) : fieldArg.instArg != null) {
-			return false;
-		}
-		return true;
-	}
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof FieldArg) || !super.equals(obj)) {
+            return false;
+        }
+        FieldArg fieldArg = (FieldArg) obj;
+        return field.equals(fieldArg.field) && (instArg != null ? instArg.equals(fieldArg.instArg) : fieldArg.instArg == null);
+    }
 
 	@Override
 	public int hashCode() {

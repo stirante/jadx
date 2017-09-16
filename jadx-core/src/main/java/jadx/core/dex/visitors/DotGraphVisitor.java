@@ -122,7 +122,7 @@ public class DotGraphVisitor extends AbstractVisitor {
 					processRegion(mth, h.getHandlerRegion());
 				}
 			}
-			Set<IBlock> regionsBlocks = new HashSet<IBlock>(mth.getBasicBlocks().size());
+			Set<IBlock> regionsBlocks = new HashSet<>(mth.getBasicBlocks().size());
 			RegionUtils.getAllRegionBlocks(mth.getRegion(), regionsBlocks);
 			for (ExceptionHandler handler : mth.getExceptionHandlers()) {
 				IContainer handlerRegion = handler.getHandlerRegion();

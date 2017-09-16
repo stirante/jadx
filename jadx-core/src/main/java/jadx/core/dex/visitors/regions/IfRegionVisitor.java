@@ -47,11 +47,8 @@ public class IfRegionVisitor extends AbstractVisitor implements IRegionVisitor, 
 
 	@Override
 	public boolean visitRegion(MethodNode mth, IRegion region) {
-		if (region instanceof IfRegion) {
-			return removeRedundantElseBlock(mth, (IfRegion) region);
-		}
-		return false;
-	}
+        return region instanceof IfRegion && removeRedundantElseBlock(mth, (IfRegion) region);
+    }
 
 	@Override
 	public void processBlock(MethodNode mth, IBlock container) {

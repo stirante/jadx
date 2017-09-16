@@ -32,7 +32,7 @@ public class StaticCompiler {
 
 		StaticFileManager staticFileManager = new StaticFileManager(fileManager, outDir);
 
-		List<String> options = new ArrayList<String>();
+		List<String> options = new ArrayList<>();
 		options.add(includeDebugInfo ? "-g" : "-g:none");
 		options.addAll(COMMON_ARGS);
 		CompilationTask task = compiler.getTask(null, staticFileManager, null, options, null, compilationUnits);
@@ -45,7 +45,7 @@ public class StaticCompiler {
 	}
 
 	private static class StaticFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-		private List<File> files = new ArrayList<File>();
+		private List<File> files = new ArrayList<>();
 		private File outDir;
 
 		protected StaticFileManager(StandardJavaFileManager fileManager, File outDir) {

@@ -48,7 +48,7 @@ public class ClsSet {
 
 	public void load(RootNode root) {
 		List<ClassNode> list = root.getClasses(true);
-		Map<String, NClass> names = new HashMap<String, NClass>(list.size());
+		Map<String, NClass> names = new HashMap<>(list.size());
 		int k = 0;
 		for (ClassNode cls : list) {
 			String clsRawName = cls.getRawName();
@@ -78,7 +78,7 @@ public class ClsSet {
 	}
 
 	public static NClass[] makeParentsArray(ClassNode cls, Map<String, NClass> names) {
-		List<NClass> parents = new ArrayList<NClass>(1 + cls.getInterfaces().size());
+		List<NClass> parents = new ArrayList<>(1 + cls.getInterfaces().size());
 		ArgType superClass = cls.getSuperClass();
 		if (superClass != null) {
 			NClass c = getCls(superClass.getObject(), names);

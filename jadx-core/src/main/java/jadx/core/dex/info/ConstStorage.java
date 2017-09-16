@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class ConstStorage {
 
 	private static final class Values {
-		private final Map<Object, FieldNode> values = new HashMap<Object, FieldNode>();
-		private final Set<Object> duplicates = new HashSet<Object>();
+		private final Map<Object, FieldNode> values = new HashMap<>();
+		private final Set<Object> duplicates = new HashSet<>();
 
 		public Map<Object, FieldNode> getValues() {
 			return values;
@@ -56,9 +56,9 @@ public class ConstStorage {
 
 	private final boolean replaceEnabled;
 	private final Values globalValues = new Values();
-	private final Map<ClassNode, Values> classes = new HashMap<ClassNode, Values>();
+	private final Map<ClassNode, Values> classes = new HashMap<>();
 
-	private Map<Integer, String> resourcesNames = new HashMap<Integer, String>();
+	private Map<Integer, String> resourcesNames = new HashMap<>();
 
 	public ConstStorage(IJadxArgs args) {
 		this.replaceEnabled = args.isReplaceConsts();
@@ -91,12 +91,8 @@ public class ConstStorage {
 	}
 
 	private Values getClsValues(ClassNode cls) {
-		Values classValues = classes.get(cls);
-		if (classValues == null) {
-			classValues = new Values();
-			classes.put(cls, classValues);
-		}
-		return classValues;
+        Values classValues = classes.computeIfAbsent(cls, k -> new Values());
+        return classValues;
 	}
 
 	@Nullable

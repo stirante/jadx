@@ -1,5 +1,6 @@
 package jadx.fxgui;
 
+import jadx.api.JadxDecompiler;
 import jadx.api.JavaNode;
 import jadx.fxgui.jobs.BackgroundWorker;
 import jadx.fxgui.jobs.DecompileJob;
@@ -374,6 +375,7 @@ public class JadxFxGUI extends Application {
     public void start(Stage primaryStage) {
         LogCollector.register();
         final JadxSettings jadxArgs = JadxSettingsAdapter.load();
+        jadxArgs.setDeobfuscationOn(true);
         if (!jadxArgs.processArgs(getParameters().getRaw().toArray(new String[getParameters().getRaw().size()]))) {
             return;
         }
@@ -420,6 +422,7 @@ public class JadxFxGUI extends Application {
     }
 
     private void openFile(File f) {
+        if (f == null) return;
         tabs.getTabs().clear();
         resetCache();
         TreeItem<String> item = new TreeItem<>(NLS.str("tree.loading"));
@@ -442,6 +445,10 @@ public class JadxFxGUI extends Application {
         }.execute();
         stage.setTitle(DEFAULT_TITLE + " - " + f.getName());
         settings.addRecentFile(f.getAbsolutePath());
+    }
+
+    public JadxDecompiler getDecompiler() {
+        return wrapper.getDecompiler();
     }
 
     private synchronized void runBackgroundJobs() {
@@ -473,6 +480,7 @@ public class JadxFxGUI extends Application {
     }
 
     public void openTab(Object node) {
+        if (node == null) return;
         Tab tab = null;
         if ((node instanceof JClass && ((JClass) node).getJParent() == null) || (node instanceof JResource && ((JResource) node).isText()))
             tab = new CodeView(this, (JNode) node);
@@ -481,6 +489,7 @@ public class JadxFxGUI extends Application {
         else if (node instanceof JNode) {
             if (node instanceof JField || node instanceof JMethod || (node instanceof JClass && ((JClass) node).getJParent() != null)) {
                 JClass parent = ((JNode) node).getJParent();
+                while (parent.getJParent() != null) parent = parent.getJParent();
                 tab = new CodeView(this, parent);
                 if (!tabs.getTabs().contains(tab)) {
                     tabs.getTabs().add(tab);
@@ -504,7 +513,7 @@ public class JadxFxGUI extends Application {
             }
         }
         if (tab == null) {
-            throw new IllegalArgumentException("Invalid argument type in openTab (" + node.getClass().getName() + ")");
+            return;
         }
         if (!tabs.getTabs().contains(tab)) {
             tabs.getTabs().add(tab);
@@ -512,6 +521,16 @@ public class JadxFxGUI extends Application {
         } else {
             tabs.getSelectionModel().select(tab);
         }
+    }
+
+    public void refreshTabs() {
+        getDecompiler().getRenameVisitor().init(getDecompiler().getRoot());
+        for (Tab tab : tabs.getTabs()) {
+            if (tab instanceof CodeView)
+                ((CodeView) tab).refresh();
+        }
+        TreeItem<String> root = fileTree.getRoot();
+        if (root instanceof JNode) ((JNode) root).invalidateValues();
     }
 
     public class DummyJavaNode extends JNode {

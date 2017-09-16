@@ -9,6 +9,7 @@ import jadx.core.dex.nodes.ClassNode;
 import jadx.gui.JadxWrapper;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -36,7 +37,7 @@ public class JSourcesTest {
 	public void testHierarchyPackages() {
 		String pkgName = "a.b.c.d.e";
 
-		List<JavaPackage> packages = Arrays.asList(newPkg(pkgName));
+		List<JavaPackage> packages = Collections.singletonList(newPkg(pkgName));
 		List<JPackage> out = sources.getHierarchyPackages(packages);
 
 		assertEquals(out.size(), 1);
@@ -96,7 +97,7 @@ public class JSourcesTest {
 	}
 
 	private JavaPackage newPkg(String name) {
-		return Factory.newPackage(name, Arrays.asList(newClass()));
+		return Factory.newPackage(name, Collections.singletonList(newClass()));
 	}
 
 	private JavaClass newClass() {

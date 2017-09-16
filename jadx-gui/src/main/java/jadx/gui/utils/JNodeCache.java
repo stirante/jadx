@@ -15,18 +15,14 @@ import java.util.Map;
 
 public class JNodeCache {
 
-	private final Map<JavaNode, JNode> cache = new HashMap<JavaNode, JNode>();
+	private final Map<JavaNode, JNode> cache = new HashMap<>();
 
 	public JNode makeFrom(JavaNode javaNode) {
 		if (javaNode == null) {
 			return null;
 		}
-		JNode jNode = cache.get(javaNode);
-		if (jNode == null) {
-			jNode = convert(javaNode);
-			cache.put(javaNode, jNode);
-		}
-		return jNode;
+        JNode jNode = cache.computeIfAbsent(javaNode, this::convert);
+        return jNode;
 	}
 
 	private JNode convert(JavaNode node) {

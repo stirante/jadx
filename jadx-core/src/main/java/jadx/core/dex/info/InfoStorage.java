@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class InfoStorage {
 
-	private final Map<ArgType, ClassInfo> classes = new HashMap<ArgType, ClassInfo>();
-	private final Map<Integer, MethodInfo> methods = new HashMap<Integer, MethodInfo>();
-	private final Map<FieldInfo, FieldInfo> fields = new HashMap<FieldInfo, FieldInfo>();
+	private final Map<ArgType, ClassInfo> classes = new HashMap<>();
+	private final Map<Integer, MethodInfo> methods = new HashMap<>();
+	private final Map<FieldInfo, FieldInfo> fields = new HashMap<>();
 
 	public ClassInfo getCls(ArgType type) {
 		return classes.get(type);

@@ -17,12 +17,7 @@ public class TestAnonymousClass9 extends IntegrationTest {
 
 	public static class TestCls {
 
-		public Callable<String> c = new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return "str";
-			}
-		};
+		public Callable<String> c = () -> "str";
 
 		public Runnable test() {
 			return new FutureTask<String>(this.c) {

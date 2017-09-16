@@ -19,14 +19,14 @@ public class TestBreakWithLabel extends IntegrationTest {
 		public boolean test(int[][] arr, int b) {
 			boolean found = false;
 			loop0:
-			for (int i = 0; i < arr.length; i++) {
-				for (int j = 0; j < arr[i].length; j++) {
-					if (arr[i][j] == b) {
-						found = true;
-						break loop0;
-					}
-				}
-			}
+            for (int[] anArr : arr) {
+                for (int j = 0; j < anArr.length; j++) {
+                    if (anArr[j] == b) {
+                        found = true;
+                        break loop0;
+                    }
+                }
+            }
 			System.out.println("found: " + found);
 			return found;
 		}

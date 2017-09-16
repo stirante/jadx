@@ -51,11 +51,7 @@ class AboutDialog extends JDialog {
 		textPane.add(Box.createRigidArea(new Dimension(0, 20)));
 
 		JButton close = new JButton(NLS.str("tabs.close"));
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				dispose();
-			}
-		});
+		close.addActionListener(event -> dispose());
 		close.setAlignmentX(0.5f);
 
 		Container contentPane = getContentPane();

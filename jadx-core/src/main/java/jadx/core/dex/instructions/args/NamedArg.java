@@ -28,15 +28,12 @@ public final class NamedArg extends InsnArg implements Named {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof NamedArg)) {
-			return false;
-		}
-		return name.equals(((NamedArg) o).name);
+        if (this == o) {
+            return true;
+        }
+        return o instanceof NamedArg && name.equals(((NamedArg) o).name);
 
-	}
+    }
 
 	@Override
 	public int hashCode() {

@@ -26,12 +26,12 @@ public class NameGen {
 
 	private static final Map<String, String> OBJ_ALIAS;
 
-	private final Set<String> varNames = new HashSet<String>();
+	private final Set<String> varNames = new HashSet<>();
 	private final MethodNode mth;
 	private final boolean fallback;
 
 	static {
-		OBJ_ALIAS = new HashMap<String, String>();
+		OBJ_ALIAS = new HashMap<>();
 		OBJ_ALIAS.put(Consts.CLASS_STRING, "str");
 		OBJ_ALIAS.put(Consts.CLASS_CLASS, "cls");
 		OBJ_ALIAS.put(Consts.CLASS_THROWABLE, "th");

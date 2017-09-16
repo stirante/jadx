@@ -25,7 +25,7 @@ public class TestNameAssign2 extends IntegrationTest {
 			int blocksCount = blocks.size();
 			BitSet hasPhi = new BitSet(blocksCount);
 			BitSet processed = new BitSet(blocksCount);
-			Deque<BlockNode> workList = new LinkedList<BlockNode>();
+			Deque<BlockNode> workList = new LinkedList<>();
 
 			BitSet assignBlocks = la.getAssignBlocks(regNum);
 			for (int id = assignBlocks.nextSetBit(0); id >= 0; id = assignBlocks.nextSetBit(id + 1)) {

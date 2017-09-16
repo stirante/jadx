@@ -25,7 +25,7 @@ public class TestIssue86 extends IntegrationTest {
 		private static final String DESC_TAG = "desc-tag";
 
 		private List<Day> test(String response) {
-			List<Day> reportList = new ArrayList<Day>();
+			List<Day> reportList = new ArrayList<>();
 			try {
 				System.out.println(response);
 				if (response != null

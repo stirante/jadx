@@ -31,7 +31,7 @@ public class DynamicCompiler {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		fileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null));
 
-		List<JavaFileObject> jFiles = new ArrayList<JavaFileObject>(1);
+		List<JavaFileObject> jFiles = new ArrayList<>(1);
 		jFiles.add(new CharSequenceJavaFileObject(fullName, code));
 
 		CompilationTask compilerTask = compiler.getTask(null, fileManager, null, null, null, jFiles);

@@ -27,7 +27,7 @@ public class ValuesParser extends ParserConstants {
 			return decodeValue(simpleValue);
 		}
 		List<RawNamedValue> namedValues = ri.getNamedValues();
-		List<String> strList = new ArrayList<String>(namedValues.size());
+		List<String> strList = new ArrayList<>(namedValues.size());
 		for (RawNamedValue value : namedValues) {
 			String nameStr = decodeNameRef(value.getNameRef());
 			String valueStr = decodeValue(value.getRawValue());

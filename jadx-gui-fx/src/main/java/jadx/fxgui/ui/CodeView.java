@@ -1,6 +1,10 @@
 package jadx.fxgui.ui;
 
+import jadx.api.JavaClass;
+import jadx.api.JavaField;
+import jadx.api.JavaMethod;
 import jadx.api.JavaNode;
+import jadx.core.dex.nodes.ProcessState;
 import jadx.fxgui.JadxFxGUI;
 import jadx.fxgui.treemodel.JClass;
 import jadx.fxgui.treemodel.JNode;
@@ -23,6 +27,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +39,7 @@ public class CodeView extends Tab {
     private static final Pattern WORD = Pattern.compile("\\w+");
     private final MenuItem copyItem;
     private final MenuItem usageItem;
+    private final MenuItem renameItem;
     @FXML
     public StackPane content;
     private CodeArea codeArea;
@@ -66,7 +72,31 @@ public class CodeView extends Tab {
             alert.showAndWait();
             System.out.println(currentNode);
         });
-        context.getItems().addAll(copyItem, usageItem);
+        renameItem = new MenuItem("Rename");
+        renameItem.setOnAction(e -> {
+            if (currentNode instanceof JavaClass) {
+                Optional<String> s = Dialogs.queryUserInput("Rename", "Rename class", currentNode.getFullName() + "=>");
+                if (s.isPresent()) {
+                    app.getDecompiler().getDeobfuscator().rename(((JavaClass) currentNode).getClassInfo(), s.get());
+                    app.refreshTabs();
+                }
+            } else if (currentNode instanceof JavaMethod && !((JavaMethod) currentNode).isConstructor()) {
+                Optional<String> s = Dialogs.queryUserInput("Rename", "Rename method", currentNode.getFullName() + "=>");
+                if (s.isPresent()) {
+                    app.getDecompiler().getDeobfuscator().rename(((JavaMethod) currentNode).getMethodInfo(), s.get());
+                    app.refreshTabs();
+                }
+            } else if (currentNode instanceof JavaField) {
+                Optional<String> s = Dialogs.queryUserInput("Rename", "Rename field", currentNode.getFullName() + "=>");
+                if (s.isPresent()) {
+                    app.getDecompiler().getDeobfuscator().rename(((JavaField) currentNode).getFieldInfo(), s.get());
+                    app.refreshTabs();
+                }
+            } else if (currentNode instanceof JavaMethod && ((JavaMethod) currentNode).isConstructor()) {
+                Dialogs.showWarning("Rename", "You can't rename constructor!");
+            }
+        });
+        context.getItems().addAll(copyItem, renameItem, usageItem);
         syntax = BaseSyntax.getFor(node.getSyntaxName());
         codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
@@ -94,10 +124,10 @@ public class CodeView extends Tab {
             String selectedText = codeArea.getSelectedText();
             copyItem.setDisable(selectedText == null || selectedText.isEmpty());
             if (node instanceof JClass) {
-//                ((JClass) node).getCls().getClassInfo().rename(((JClass) node).getCls().getClassNode().dex(), "Test");
                 CharacterHit hit = codeArea.hit(event.getX(), event.getY());
                 JClass clz = (JClass) node;
                 currentNode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
+                System.out.println(currentNode.toString());
                 usageItem.setDisable(currentNode == null);
             }
         });
@@ -186,5 +216,16 @@ public class CodeView extends Tab {
         if (initialized)
             codeArea.moveTo(codeArea.position(i, 0).toOffset());
         else line = i;
+    }
+
+    public void refresh() {
+        int pos = codeArea.getCaretPosition();
+        if (node instanceof JClass) {
+            ((JClass) node).getCls().getClassNode().setState(ProcessState.NOT_LOADED);
+            ((JClass) node).getCls().decompile();
+        }
+        setText(node.getName());
+        codeArea.replaceText(0, codeArea.getLength(), node.getContent());
+        codeArea.moveTo(pos);
     }
 }

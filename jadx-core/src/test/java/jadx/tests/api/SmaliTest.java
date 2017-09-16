@@ -37,7 +37,7 @@ public class SmaliTest extends IntegrationTest {
 	}
 
 	private static boolean compileSmali(File input, File output) {
-		List<String> args = new ArrayList<String>();
+		List<String> args = new ArrayList<>();
 		args.add(input.getAbsolutePath());
 
 		args.add("-o");

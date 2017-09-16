@@ -12,15 +12,13 @@ public abstract class AsyncTask<P, T, R> {
     private AtomicBoolean cancelled = new AtomicBoolean(false);
     private AtomicBoolean done = new AtomicBoolean(false);
 
+    @SafeVarargs
     public final void execute(P... params) {
-        new Thread() {
-            @Override
-            public void run() {
-                R result = doInBackground(params);
-                done.set(true);
-                Platform.runLater(() -> onPostExecute(result));
-            }
-        }.start();
+        new Thread(() -> {
+            R result = doInBackground(params);
+            done.set(true);
+            Platform.runLater(() -> onPostExecute(result));
+        }).start();
     }
 
     public void onProgress(T progress) {

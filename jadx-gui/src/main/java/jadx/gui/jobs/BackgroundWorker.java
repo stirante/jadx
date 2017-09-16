@@ -27,12 +27,7 @@ public class BackgroundWorker extends SwingWorker<Void, Void> {
 		if (isDone()) {
 			return;
 		}
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				progressPane.setVisible(true);
-			}
-		});
+		SwingUtilities.invokeLater(() -> progressPane.setVisible(true));
 		addPropertyChangeListener(progressPane);
 		execute();
 	}

@@ -12,6 +12,7 @@
 .tree-view {
     -fx-text-background-color: gray ;
     -fx-selection-bar: #404040;
+    -fx-focus-color: transparent;
 }
 
 .text {

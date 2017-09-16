@@ -35,12 +35,7 @@ public class UsageDialog extends CommonSearchDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						openInit();
-					}
-				});
+				SwingUtilities.invokeLater(() -> openInit());
 			}
 		});
 		loadWindowPos();

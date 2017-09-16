@@ -24,7 +24,7 @@ public class TestTryCatchFinally5 extends IntegrationTest {
 				if (!d.first()) {
 					return null;
 				}
-				List<E> list = new ArrayList<E>();
+				List<E> list = new ArrayList<>();
 				do {
 					list.add(b.load(d));
 				} while (d.toNext());

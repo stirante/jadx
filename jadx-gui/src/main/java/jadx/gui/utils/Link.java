@@ -64,12 +64,10 @@ public class Link extends JLabel implements MouseListener {
 				try {
 					desktop.browse(new java.net.URI(url));
 					return;
-				} catch (IOException e) {
-					LOG.debug("Open url error", e);
-				} catch (URISyntaxException e) {
+				} catch (IOException | URISyntaxException e) {
 					LOG.debug("Open url error", e);
 				}
-			}
+            }
 		}
 		try {
 			String os = System.getProperty("os.name").toLowerCase();

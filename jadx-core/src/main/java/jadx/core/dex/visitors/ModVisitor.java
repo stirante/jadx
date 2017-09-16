@@ -216,7 +216,7 @@ public class ModVisitor extends AbstractVisitor {
 				RegisterArg resultArg = co.getResult();
 				if (!resultArg.equals(instArg)) {
 					// replace all usages of 'instArg' with result of this constructor instruction
-					for (RegisterArg useArg : new ArrayList<RegisterArg>(instArg.getSVar().getUseList())) {
+					for (RegisterArg useArg : new ArrayList<>(instArg.getSVar().getUseList())) {
 						RegisterArg dup = resultArg.duplicate();
 						InsnNode parentInsn = useArg.getParentInsn();
 						parentInsn.replaceArg(useArg, dup);
@@ -284,7 +284,7 @@ public class ModVisitor extends AbstractVisitor {
 	}
 
 	private static Map<InsnArg, FieldNode> getArgsToFieldsMapping(MethodNode callMthNode, ConstructorInsn co) {
-		Map<InsnArg, FieldNode> map = new LinkedHashMap<InsnArg, FieldNode>();
+		Map<InsnArg, FieldNode> map = new LinkedHashMap<>();
 		ClassNode parentClass = callMthNode.getParentClass();
 		List<RegisterArg> argList = callMthNode.getArguments(false);
 		int startArg = parentClass.getAccessFlags().isStatic() ? 0 : 1;

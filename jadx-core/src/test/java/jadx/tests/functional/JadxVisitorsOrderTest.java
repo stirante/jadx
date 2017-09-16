@@ -34,13 +34,13 @@ public class JadxVisitorsOrderTest {
 	}
 
 	private static List<String> check(List<IDexTreeVisitor> passes) {
-		List<Class<?>> classList = new ArrayList<Class<?>>(passes.size());
+		List<Class<?>> classList = new ArrayList<>(passes.size());
 		for (IDexTreeVisitor pass : passes) {
 			classList.add(pass.getClass());
 		}
-		List<String> errors = new ArrayList<String>();
+		List<String> errors = new ArrayList<>();
 
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		for (int i = 0; i < passes.size(); i++) {
 			IDexTreeVisitor pass = passes.get(i);
 			JadxVisitor info = pass.getClass().getAnnotation(JadxVisitor.class);

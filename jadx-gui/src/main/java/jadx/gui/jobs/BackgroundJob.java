@@ -39,14 +39,11 @@ public abstract class BackgroundJob {
 
 	private class ShutdownTask extends FutureTask<Boolean> {
 		public ShutdownTask() {
-			super(new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					runJob();
-					executor.shutdown();
-					return executor.awaitTermination(5, TimeUnit.MINUTES);
-				}
-			});
+			super(() -> {
+                runJob();
+                executor.shutdown();
+                return executor.awaitTermination(5, TimeUnit.MINUTES);
+            });
 		}
 
 		@Override

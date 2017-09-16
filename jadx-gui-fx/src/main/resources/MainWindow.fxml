@@ -1,51 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TreeView?>
-
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <MenuBar>
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <SplitPane dividerPositions="0.25" prefHeight="720.0" prefWidth="1280.0" VBox.vgrow="ALWAYS">
-         <items>
-            <TreeView fx:id="fileTree" />
-            <TabPane fx:id="tabs" tabClosingPolicy="ALL_TABS">
-      </TabPane>
-         </items>
-      </SplitPane>
-      <HBox fx:id="pbox" prefHeight="25.0">
-         <children>
-            <StackPane prefHeight="25.0">
-               <children>
-                  <ProgressBar fx:id="progress" prefHeight="25.0" prefWidth="320.0" progress="0.0" />
-                  <Label fx:id="statusText" textFill="#9d9d9d"/>
-               </children>
-            </StackPane>
-         </children>
-      </HBox>
-   </children>
+    <MenuBar>
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" text="Close"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+            <MenuItem mnemonicParsing="false" text="Delete"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" text="About"/>
+        </Menu>
+    </MenuBar>
+    <SplitPane dividerPositions="0.25" prefHeight="720.0" prefWidth="1280.0" VBox.vgrow="ALWAYS">
+        <TreeView fx:id="fileTree"/>
+        <TabPane fx:id="tabs" tabClosingPolicy="ALL_TABS">
+        </TabPane>
+    </SplitPane>
+    <HBox fx:id="pbox" prefHeight="25.0">
+        <StackPane prefHeight="25.0">
+            <ProgressBar fx:id="progress" prefHeight="25.0" prefWidth="320.0" progress="0.0"/>
+            <Label fx:id="statusText" textFill="#9d9d9d"/>
+        </StackPane>
+    </HBox>
 </VBox>

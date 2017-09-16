@@ -158,7 +158,7 @@ public class RegionMaker {
 
 		// set exit blocks scan order priority
 		// this can help if loop have several exits (after using 'break' or 'return' in loop)
-		List<BlockNode> exitBlocks = new ArrayList<BlockNode>(exitBlocksSet.size());
+		List<BlockNode> exitBlocks = new ArrayList<>(exitBlocksSet.size());
 		BlockNode nextStart = getNextBlock(loopStart);
 		if (nextStart != null && exitBlocksSet.remove(nextStart)) {
 			exitBlocks.add(nextStart);
@@ -511,8 +511,8 @@ public class RegionMaker {
 		synchRegion.getSubBlocks().add(block);
 		curRegion.getSubBlocks().add(synchRegion);
 
-		Set<BlockNode> exits = new HashSet<BlockNode>();
-		Set<BlockNode> cacheSet = new HashSet<BlockNode>();
+		Set<BlockNode> exits = new HashSet<>();
+		Set<BlockNode> cacheSet = new HashSet<>();
 		traverseMonitorExits(synchRegion, insn.getArg(0), block, exits, cacheSet);
 
 		for (InsnNode exitInsn : synchRegion.getExitInsns()) {
@@ -691,19 +691,15 @@ public class RegionMaker {
 
 		int len = insn.getTargets().length;
 		// sort by target
-		Map<Integer, List<Object>> casesMap = new LinkedHashMap<Integer, List<Object>>(len);
+		Map<Integer, List<Object>> casesMap = new LinkedHashMap<>(len);
 		for (int i = 0; i < len; i++) {
 			Object key = insn.getKeys()[i];
 			int targ = insn.getTargets()[i];
-			List<Object> keys = casesMap.get(targ);
-			if (keys == null) {
-				keys = new ArrayList<Object>(2);
-				casesMap.put(targ, keys);
-			}
-			keys.add(key);
+            List<Object> keys = casesMap.computeIfAbsent(targ, k -> new ArrayList<Object>(2));
+            keys.add(key);
 		}
 
-		Map<BlockNode, List<Object>> blocksMap = new LinkedHashMap<BlockNode, List<Object>>(len);
+		Map<BlockNode, List<Object>> blocksMap = new LinkedHashMap<>(len);
 		for (Map.Entry<Integer, List<Object>> entry : casesMap.entrySet()) {
 			BlockNode c = getBlockByOffset(entry.getKey(), block.getSuccessors());
 			if (c == null) {
@@ -717,7 +713,7 @@ public class RegionMaker {
 		}
 		LoopInfo loop = mth.getLoopForBlock(block);
 
-		Map<BlockNode, BlockNode> fallThroughCases = new LinkedHashMap<BlockNode, BlockNode>();
+		Map<BlockNode, BlockNode> fallThroughCases = new LinkedHashMap<>();
 
 		List<BlockNode> basicBlocks = mth.getBasicBlocks();
 		BitSet outs = new BitSet(basicBlocks.size());
@@ -859,24 +855,21 @@ public class RegionMaker {
 
 	private Map<BlockNode, List<Object>> reOrderSwitchCases(Map<BlockNode, List<Object>> blocksMap,
 			final Map<BlockNode, BlockNode> fallThroughCases) {
-		List<BlockNode> list = new ArrayList<BlockNode>(blocksMap.size());
+		List<BlockNode> list = new ArrayList<>(blocksMap.size());
 		list.addAll(blocksMap.keySet());
-		Collections.sort(list, new Comparator<BlockNode>() {
-			@Override
-			public int compare(BlockNode a, BlockNode b) {
-				BlockNode nextA = fallThroughCases.get(a);
-				if (nextA != null) {
-					if (b.equals(nextA)) {
-						return -1;
-					}
-				} else if (a.equals(fallThroughCases.get(b))) {
-					return 1;
-				}
-				return 0;
-			}
-		});
+		list.sort((a, b) -> {
+            BlockNode nextA = fallThroughCases.get(a);
+            if (nextA != null) {
+                if (b.equals(nextA)) {
+                    return -1;
+                }
+            } else if (a.equals(fallThroughCases.get(b))) {
+                return 1;
+            }
+            return 0;
+        });
 
-		Map<BlockNode, List<Object>> newBlocksMap = new LinkedHashMap<BlockNode, List<Object>>(blocksMap.size());
+		Map<BlockNode, List<Object>> newBlocksMap = new LinkedHashMap<>(blocksMap.size());
 		for (BlockNode key : list) {
 			newBlocksMap.put(key, blocksMap.get(key));
 		}
@@ -902,13 +895,13 @@ public class RegionMaker {
 	}
 
 	public IRegion processTryCatchBlocks(MethodNode mth) {
-		Set<TryCatchBlock> tcs = new HashSet<TryCatchBlock>();
+		Set<TryCatchBlock> tcs = new HashSet<>();
 		for (ExceptionHandler handler : mth.getExceptionHandlers()) {
 			tcs.add(handler.getTryBlock());
 		}
 		for (TryCatchBlock tc : tcs) {
-			List<BlockNode> blocks = new ArrayList<BlockNode>(tc.getHandlersCount());
-			Set<BlockNode> splitters = new HashSet<BlockNode>();
+			List<BlockNode> blocks = new ArrayList<>(tc.getHandlersCount());
+			Set<BlockNode> splitters = new HashSet<>();
 			for (ExceptionHandler handler : tc.getHandlers()) {
 				BlockNode handlerBlock = handler.getHandlerBlock();
 				if (handlerBlock != null) {
@@ -918,7 +911,7 @@ public class RegionMaker {
 					LOG.debug(ErrorsCounter.formatErrorMsg(mth, "No exception handler block: " + handler));
 				}
 			}
-			Set<BlockNode> exits = new HashSet<BlockNode>();
+			Set<BlockNode> exits = new HashSet<>();
 			for (BlockNode splitter : splitters) {
 				for (BlockNode handler : blocks) {
 					List<BlockNode> s = splitter.getSuccessors();
@@ -944,10 +937,10 @@ public class RegionMaker {
 	 * Search handlers successor blocks not included in any region.
 	 */
 	protected IRegion processHandlersOutBlocks(MethodNode mth, Set<TryCatchBlock> tcs) {
-		Set<IBlock> allRegionBlocks = new HashSet<IBlock>();
+		Set<IBlock> allRegionBlocks = new HashSet<>();
 		RegionUtils.getAllRegionBlocks(mth.getRegion(), allRegionBlocks);
 
-		Set<IBlock> succBlocks = new HashSet<IBlock>();
+		Set<IBlock> succBlocks = new HashSet<>();
 		for (TryCatchBlock tc : tcs) {
 			for (ExceptionHandler handler : tc.getHandlers()) {
 				IContainer region = handler.getHandlerRegion();
@@ -1010,14 +1003,11 @@ public class RegionMaker {
 	}
 
 	static boolean isEqualPaths(BlockNode b1, BlockNode b2) {
-		if (b1 == b2) {
-			return true;
-		}
-		if (b1 == null || b2 == null) {
-			return false;
-		}
-		return isEqualReturnBlocks(b1, b2) || isSyntheticPath(b1, b2);
-	}
+        if (b1 == b2) {
+            return true;
+        }
+        return b1 != null && b2 != null && (isEqualReturnBlocks(b1, b2) || isSyntheticPath(b1, b2));
+    }
 
 	private static boolean isSyntheticPath(BlockNode b1, BlockNode b2) {
 		BlockNode n1 = skipSyntheticSuccessor(b1);
@@ -1026,19 +1016,16 @@ public class RegionMaker {
 	}
 
 	public static boolean isEqualReturnBlocks(BlockNode b1, BlockNode b2) {
-		if (!b1.isReturnBlock() || !b2.isReturnBlock()) {
-			return false;
-		}
-		List<InsnNode> b1Insns = b1.getInstructions();
-		List<InsnNode> b2Insns = b2.getInstructions();
-		if (b1Insns.size() != 1 || b2Insns.size() != 1) {
-			return false;
-		}
-		InsnNode i1 = b1Insns.get(0);
-		InsnNode i2 = b2Insns.get(0);
-		if (i1.getArgsCount() != i2.getArgsCount()) {
-			return false;
-		}
-		return i1.getArgsCount() == 0 || i1.getArg(0).equals(i2.getArg(0));
-	}
+        if (!b1.isReturnBlock() || !b2.isReturnBlock()) {
+            return false;
+        }
+        List<InsnNode> b1Insns = b1.getInstructions();
+        List<InsnNode> b2Insns = b2.getInstructions();
+        if (b1Insns.size() != 1 || b2Insns.size() != 1) {
+            return false;
+        }
+        InsnNode i1 = b1Insns.get(0);
+        InsnNode i2 = b2Insns.get(0);
+        return i1.getArgsCount() == i2.getArgsCount() && (i1.getArgsCount() == 0 || i1.getArg(0).equals(i2.getArg(0)));
+    }
 }

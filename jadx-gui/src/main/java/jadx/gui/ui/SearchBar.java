@@ -69,33 +69,19 @@ class SearchBar extends JToolBar {
 				}
 			}
 		});
-		searchField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				search(1);
-			}
-		});
+		searchField.addActionListener(e -> search(1));
 		new TextStandardActions(searchField);
 		add(searchField);
 
 		JButton prevButton = new JButton(NLS.str("search.previous"));
 		prevButton.setIcon(ICON_UP);
-		prevButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				search(-1);
-			}
-		});
+		prevButton.addActionListener(e -> search(-1));
 		prevButton.setBorderPainted(false);
 		add(prevButton);
 
 		JButton nextButton = new JButton(NLS.str("search.next"));
 		nextButton.setIcon(ICON_DOWN);
-		nextButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				search(1);
-			}
-		});
+		nextButton.addActionListener(e -> search(1));
 		nextButton.setBorderPainted(false);
 		add(nextButton);
 
@@ -117,12 +103,7 @@ class SearchBar extends JToolBar {
 
 		JButton closeButton = new JButton();
 		closeButton.setIcon(ICON_CLOSE);
-		closeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				toggle();
-			}
-		});
+		closeButton.addActionListener(e -> toggle());
 		closeButton.setBorderPainted(false);
 		add(closeButton);
 

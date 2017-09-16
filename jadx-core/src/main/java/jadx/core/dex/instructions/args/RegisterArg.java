@@ -57,12 +57,9 @@ public class RegisterArg extends InsnArg implements Named {
 	}
 
 	public boolean isNameEquals(InsnArg arg) {
-		String n = getName();
-		if (n == null || !(arg instanceof Named)) {
-			return false;
-		}
-		return n.equals(((Named) arg).getName());
-	}
+        String n = getName();
+        return n != null && arg instanceof Named && n.equals(((Named) arg).getName());
+    }
 
 	@Override
 	public void setType(ArgType type) {
@@ -148,27 +145,21 @@ public class RegisterArg extends InsnArg implements Named {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof RegisterArg)) {
-			return false;
-		}
-		RegisterArg other = (RegisterArg) obj;
-		if (regNum != other.regNum) {
-			return false;
-		}
-		if (!type.equals(other.type)) {
-			return false;
-		}
-		if (sVar != null && !sVar.equals(other.getSVar())) {
-			return false;
-		}
-		return true;
-	}
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof RegisterArg)) {
+            return false;
+        }
+        RegisterArg other = (RegisterArg) obj;
+        if (regNum != other.regNum) {
+            return false;
+        }
+        return type.equals(other.type) && (sVar == null || sVar.equals(other.getSVar()));
+    }
 
 	@Override
 	public String toString() {

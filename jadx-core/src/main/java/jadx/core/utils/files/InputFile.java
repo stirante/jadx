@@ -27,7 +27,7 @@ public class InputFile {
 	private static final Logger LOG = LoggerFactory.getLogger(InputFile.class);
 
 	private final File file;
-	private final List<DexFile> dexFiles = new ArrayList<DexFile>();
+	private final List<DexFile> dexFiles = new ArrayList<>();
 
 	public static void addFilesFrom(File file, List<InputFile> list) throws IOException, DecodeException {
 		InputFile inputFile = new InputFile(file);
@@ -90,19 +90,22 @@ public class InputFile {
 			}
 			InputStream inputStream = zf.getInputStream(entry);
 			try {
-				if (ext.equals(".dex")) {
-					addDexFile(entryName, new Dex(inputStream));
-				} else if (ext.equals(".jar")) {
-					File jarFile = FileUtils.createTempFile(entryName);
-					FileOutputStream fos = new FileOutputStream(jarFile);
-					try {
-						IOUtils.copy(inputStream, fos);
-					} finally {
-						close(fos);
-					}
-					addDexFile(entryName, loadFromJar(jarFile));
-				} else {
-					throw new JadxRuntimeException("Unexpected extension in zip: " + ext);
+				switch (ext) {
+					case ".dex":
+						addDexFile(entryName, new Dex(inputStream));
+						break;
+					case ".jar":
+						File jarFile = FileUtils.createTempFile(entryName);
+						FileOutputStream fos = new FileOutputStream(jarFile);
+						try {
+							IOUtils.copy(inputStream, fos);
+						} finally {
+							close(fos);
+						}
+						addDexFile(entryName, loadFromJar(jarFile));
+						break;
+					default:
+						throw new JadxRuntimeException("Unexpected extension in zip: " + ext);
 				}
 			} finally {
 				close(inputStream);

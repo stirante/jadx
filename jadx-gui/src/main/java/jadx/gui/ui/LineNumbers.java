@@ -154,7 +154,7 @@ public class LineNumbers extends JPanel implements CaretListener {
 			descent = fontMetrics.getDescent();
 		} else {
 			if (fonts == null) {
-				fonts = new HashMap<String, FontMetrics>();
+				fonts = new HashMap<>();
 			}
 			Element root = codeArea.getDocument().getDefaultRootElement();
 			int index = root.getElementIndex(rowStartOffset);

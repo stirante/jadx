@@ -53,7 +53,7 @@ class TestStringRef extends Specification {
         if (!Arrays.equals(s.split(d), (expected).toArray(new String[0]))) {
             throw new IllegalArgumentException("Don't match with original split: "
                     + " s='" + s + "' d='" + d
-                    + "', expected:" + expected + ", got: " + Arrays.toString(s.split(d)));
+                    + "', expected:" + expected + ", got: " + Arrays.toString(s.split(d)))
         }
         where:
         s       | d      | expected

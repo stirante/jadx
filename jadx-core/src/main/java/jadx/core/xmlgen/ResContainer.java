@@ -34,13 +34,13 @@ public class ResContainer implements Comparable<ResContainer> {
     }
 
     public static ResContainer singleFile(String name, CodeWriter content) {
-        ResContainer resContainer = new ResContainer(name, Collections.<ResContainer>emptyList());
+        ResContainer resContainer = new ResContainer(name, Collections.emptyList());
         resContainer.content = content;
         return resContainer;
     }
 
     public static ResContainer singleImageFile(String name, InputStream content) {
-        ResContainer resContainer = new ResContainer(name, Collections.<ResContainer>emptyList());
+        ResContainer resContainer = new ResContainer(name, Collections.emptyList());
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             int nRead;
@@ -63,7 +63,7 @@ public class ResContainer implements Comparable<ResContainer> {
     }
 
     public static ResContainer multiFile(String name) {
-        return new ResContainer(name, new ArrayList<ResContainer>());
+        return new ResContainer(name, new ArrayList<>());
     }
 
     public String getName() {

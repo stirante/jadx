@@ -17,7 +17,7 @@ public class TestTypeResolver3 extends IntegrationTest {
 			if (cmp != 0) {
 				return cmp;
 			}
-			return s1.length() == s2.length() ? 0 : s1.length() < s2.length() ? -1 : 1;
+			return Integer.compare(s1.length(), s2.length());
 		}
 	}
 

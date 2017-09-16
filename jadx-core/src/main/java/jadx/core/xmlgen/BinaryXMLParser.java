@@ -46,8 +46,8 @@ public class BinaryXMLParser extends CommonBinaryParser {
 	private boolean firstElement;
 	private boolean wasOneLiner = false;
 
-	private final Map<Integer, String> styleMap = new HashMap<Integer, String>();
-	private final Map<Integer, FieldNode> localStyleMap = new HashMap<Integer, FieldNode>();
+	private final Map<Integer, String> styleMap = new HashMap<>();
+	private final Map<Integer, FieldNode> localStyleMap = new HashMap<>();
 	private final Map<Integer, String> resNames;
 	private ValuesParser valuesParser;
 
@@ -244,7 +244,7 @@ public class BinaryXMLParser extends CommonBinaryParser {
 		if ("manifest".equals(currentTag) || writer.getIndent() == 0) {
 			writer.add(" xmlns:android=\"").add(nsURI).add("\"");
 		}
-		boolean attrNewLine = attributeCount == 1 ? false : ATTR_NEW_LINE;
+		boolean attrNewLine = attributeCount != 1 && ATTR_NEW_LINE;
 		for (int i = 0; i < attributeCount; i++) {
 			parseAttribute(i, attrNewLine);
 		}

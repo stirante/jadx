@@ -16,12 +16,11 @@ public class TestNestedLoops2 extends IntegrationTest {
 
 		private boolean test(List<String> list) {
 			int j = 0;
-			for (int i = 0; i < list.size(); i++) {
-				String s = list.get(i);
-				while (j < s.length()) {
-					j++;
-				}
-			}
+            for (String s : list) {
+                while (j < s.length()) {
+                    j++;
+                }
+            }
 			return j > 10;
 		}
 	}

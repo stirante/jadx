@@ -16,7 +16,7 @@ import java.util.Map;
 public class CodeUsageInfo {
 
 	public static class UsageInfo {
-		private final List<CodeNode> usageList = new ArrayList<CodeNode>();
+		private final List<CodeNode> usageList = new ArrayList<>();
 
 		public List<CodeNode> getUsageList() {
 			return usageList;
@@ -29,7 +29,7 @@ public class CodeUsageInfo {
 		this.nodeCache = nodeCache;
 	}
 
-	private final Map<JNode, UsageInfo> usageMap = new HashMap<JNode, UsageInfo>();
+	private final Map<JNode, UsageInfo> usageMap = new HashMap<>();
 
 	public void processClass(JavaClass javaClass, CodeLinesInfo linesInfo, List<StringRef> lines) {
 		Map<CodePosition, JavaNode> usage = javaClass.getUsageMap();
@@ -42,12 +42,8 @@ public class CodeUsageInfo {
 
 	private void addUsage(JNode jNode, JavaClass javaClass,
 			CodeLinesInfo linesInfo, CodePosition codePosition, List<StringRef> lines) {
-		UsageInfo usageInfo = usageMap.get(jNode);
-		if (usageInfo == null) {
-			usageInfo = new UsageInfo();
-			usageMap.put(jNode, usageInfo);
-		}
-		int line = codePosition.getLine();
+        UsageInfo usageInfo = usageMap.computeIfAbsent(jNode, k -> new UsageInfo());
+        int line = codePosition.getLine();
 		JavaNode javaNodeByLine = linesInfo.getJavaNodeByLine(line);
 		StringRef codeLine = lines.get(line - 1);
 		JNode node = nodeCache.makeFrom(javaNodeByLine == null ? javaClass : javaNodeByLine);

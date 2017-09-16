@@ -70,6 +70,14 @@ public abstract class JNode extends TreeItem<String> implements Serializable {
         return false;
     }
 
+    public void invalidateValues() {
+        setValue(toString());
+        for (TreeItem<String> item : getChildren()) {
+            if (item instanceof JNode) ((JNode) item).invalidateValues();
+        }
+    }
+
+
     public String makeLongString() {
         return makeString();
     }

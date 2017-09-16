@@ -21,7 +21,7 @@ public class TestFieldInit extends IntegrationTest {
 		public class A {
 		}
 
-		private static List<String> s = new ArrayList<String>();
+		private static List<String> s = new ArrayList<>();
 
 		private A a = new A();
 		private int i =  1 + Random.class.getSimpleName().length();

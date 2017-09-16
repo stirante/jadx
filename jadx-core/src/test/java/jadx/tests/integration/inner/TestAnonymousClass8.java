@@ -17,11 +17,7 @@ public class TestAnonymousClass8 extends IntegrationTest {
 		public final double d = Math.abs(4);
 
 		public Runnable test() {
-			return new Runnable() {
-				public void run() {
-					System.out.println(d);
-				}
-			};
+			return () -> System.out.println(d);
 		}
 	}
 

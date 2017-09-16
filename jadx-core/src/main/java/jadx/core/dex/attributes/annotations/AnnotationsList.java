@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class AnnotationsList implements IAttribute {
 
-	public static final AnnotationsList EMPTY = new AnnotationsList(Collections.<Annotation>emptyList());
+	public static final AnnotationsList EMPTY = new AnnotationsList(Collections.emptyList());
 
 	private final Map<String, Annotation> map;
 
 	public AnnotationsList(List<Annotation> anList) {
-		map = new HashMap<String, Annotation>(anList.size());
+		map = new HashMap<>(anList.size());
 		for (Annotation a : anList) {
 			map.put(a.getAnnotationClass(), a);
 		}

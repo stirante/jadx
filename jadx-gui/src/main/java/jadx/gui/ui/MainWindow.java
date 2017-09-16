@@ -116,18 +116,10 @@ public class MainWindow extends JFrame {
 		if (!settings.isCheckForUpdates()) {
 			return;
 		}
-		JadxUpdate.check(new IUpdateCallback() {
-			@Override
-			public void onUpdate(final Release r) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						updateLink.setText(String.format(NLS.str("menu.update_label"), r.getName()));
-						updateLink.setVisible(true);
-					}
-				});
-			}
-		});
+		JadxUpdate.check(r -> SwingUtilities.invokeLater(() -> {
+updateLink.setText(String.format(NLS.str("menu.update_label"), r.getName()));
+updateLink.setVisible(true);
+}));
 	}
 
 	public void openFile() {
@@ -485,12 +477,7 @@ public class MainWindow extends JFrame {
 
 		flatPkgButton = new JToggleButton(ICON_FLAT_PKG);
 		flatPkgButton.setSelected(isFlattenPackage);
-		ActionListener flatPkgAction = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				toggleFlattenPackage();
-			}
-		};
+		ActionListener flatPkgAction = e -> toggleFlattenPackage();
 		flatPkgMenuItem.addActionListener(flatPkgAction);
 		flatPkgButton.addActionListener(flatPkgAction);
 		flatPkgButton.setToolTipText(NLS.str("menu.flatten"));
@@ -655,12 +642,7 @@ public class MainWindow extends JFrame {
 				}
 				JMenuItem menuItem = new JMenuItem(file);
 				recentFiles.add(menuItem);
-				menuItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						openFile(new File(file));
-					}
-				});
+				menuItem.addActionListener(e1 -> openFile(new File(file)));
 			}
 			if (recentFiles.getItemCount() == 0) {
 				recentFiles.add(new JMenuItem(NLS.str("menu.no_recent_files")));

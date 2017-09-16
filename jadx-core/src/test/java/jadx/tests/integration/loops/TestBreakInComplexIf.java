@@ -39,7 +39,7 @@ public class TestBreakInComplexIf extends IntegrationTest {
 		}
 
 		public void check() {
-			Map<String, Point> map = new HashMap<String, Point>();
+			Map<String, Point> map = new HashMap<>();
 			map.put("3", new Point(100, 100));
 			map.put("4", new Point(60, 100));
 			assertThat(test(map, 2), is(3));

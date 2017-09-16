@@ -44,14 +44,11 @@ class LogViewer extends JDialog {
 		@SuppressWarnings("unchecked")
 		final JComboBox cb = new JComboBox(LEVEL_ITEMS);
 		cb.setSelectedItem(level);
-		cb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int i = cb.getSelectedIndex();
-				level = LEVEL_ITEMS[i];
-				registerLogListener();
-			}
-		});
+		cb.addActionListener(e -> {
+            int i = cb.getSelectedIndex();
+            level = LEVEL_ITEMS[i];
+            registerLogListener();
+        });
 		JLabel levelLabel = new JLabel(NLS.str("log.level"));
 		levelLabel.setLabelFor(cb);
 		controlPane.add(levelLabel);
@@ -60,11 +57,7 @@ class LogViewer extends JDialog {
 		JScrollPane scrollPane = new JScrollPane(textPane);
 
 		JButton close = new JButton(NLS.str("tabs.close"));
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				close();
-			}
-		});
+		close.addActionListener(event -> close());
 		close.setAlignmentX(0.5f);
 
 		Container contentPane = getContentPane();
@@ -92,12 +85,10 @@ class LogViewer extends JDialog {
 
 			@Override
 			public void onAppend(final String logStr) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						textPane.append(logStr);
-						textPane.updateUI();
-					}
-				});
+				SwingUtilities.invokeLater(() -> {
+                    textPane.append(logStr);
+                    textPane.updateUI();
+                });
 			}
 		});
 	}

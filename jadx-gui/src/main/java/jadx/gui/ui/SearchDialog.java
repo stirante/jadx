@@ -59,12 +59,7 @@ public class SearchDialog extends CommonSearchDialog {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						openInit();
-					}
-				});
+				SwingUtilities.invokeLater(() -> openInit());
 			}
 		});
 		loadWindowPos();
@@ -204,16 +199,14 @@ public class SearchDialog extends CommonSearchDialog {
 		final JCheckBox chBox = new JCheckBox(name);
 		chBox.setAlignmentX(LEFT_ALIGNMENT);
 		chBox.setSelected(options.contains(opt));
-		chBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (chBox.isSelected()) {
-					options.add(opt);
-				} else {
-					options.remove(opt);
-				}
-				performSearch();
-			}
-		});
+		chBox.addItemListener(e -> {
+            if (chBox.isSelected()) {
+                options.add(opt);
+            } else {
+                options.remove(opt);
+            }
+            performSearch();
+        });
 		return chBox;
 	}
 

@@ -53,21 +53,17 @@ public class TestCF3 extends AbstractTest {
 	}
 
 	public boolean testNestedLoops(List<String> l1, List<String> l2) {
-		Iterator<String> it1 = l1.iterator();
-		while (it1.hasNext()) {
-			String s1 = it1.next();
-			Iterator<String> it2 = l2.iterator();
-			while (it2.hasNext()) {
-				String s2 = it2.next();
-				if (s1.equals(s2)) {
-					if (s1.length() == 5) {
-						l2.add(s1);
-					} else {
-						l1.remove(s2);
-					}
-				}
-			}
-		}
+        for (String s1 : l1) {
+            for (String s2 : l2) {
+                if (s1.equals(s2)) {
+                    if (s1.length() == 5) {
+                        l2.add(s1);
+                    } else {
+                        l1.remove(s2);
+                    }
+                }
+            }
+        }
 		if (l2.size() > 0) {
 			l1.clear();
 		}
@@ -127,26 +123,22 @@ public class TestCF3 extends AbstractTest {
 	}
 
 	public String testReturnInLoop(List<String> list) {
-		Iterator<String> it = list.iterator();
-		while (it.hasNext()) {
-			String ver = it.next();
-			if (ver != null) {
-				return ver;
-			}
-		}
+        for (String ver : list) {
+            if (ver != null) {
+                return ver;
+            }
+        }
 		return "error";
 	}
 
 	public String testReturnInLoop2(List<String> list) {
 		try {
-			Iterator<String> it = list.iterator();
-			while (it.hasNext()) {
-				String ver = it.next();
-				exc();
-				if (ver != null) {
-					return ver;
-				}
-			}
+            for (String ver : list) {
+                exc();
+                if (ver != null) {
+                    return ver;
+                }
+            }
 		} catch (Exception e) {
 			setEnabled(false);
 		}
@@ -218,8 +210,8 @@ public class TestCF3 extends AbstractTest {
 		assertTrue(enabled);
 
 		assertTrue(testNestedLoops(
-				new ArrayList<String>(Arrays.asList("a1", "a2")),
-				new ArrayList<String>(Arrays.asList("a1", "b2"))));
+				new ArrayList<>(Arrays.asList("a1", "a2")),
+				new ArrayList<>(Arrays.asList("a1", "b2"))));
 
 		List<String> list1 = Arrays.asList(null, "a", "b");
 		assertEquals(testReturnInLoop(list1), "a");

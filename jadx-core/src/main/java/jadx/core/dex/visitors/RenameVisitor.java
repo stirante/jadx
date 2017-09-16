@@ -32,14 +32,16 @@ public class RenameVisitor extends AbstractVisitor {
 	@Override
 	public void init(RootNode root) {
 		IJadxArgs args = root.getArgs();
+		if (deobfuscator == null) {
 
-		InputFile firstInputFile = root.getDexNodes().get(0).getDexFile().getInputFile();
-		final String firstInputFileName = firstInputFile.getFile().getAbsolutePath();
-		final String inputPath = FilenameUtils.getFullPathNoEndSeparator(firstInputFileName);
-		final String inputName = FilenameUtils.getBaseName(firstInputFileName);
+			InputFile firstInputFile = root.getDexNodes().get(0).getDexFile().getInputFile();
+			final String firstInputFileName = firstInputFile.getFile().getAbsolutePath();
+			final String inputPath = FilenameUtils.getFullPathNoEndSeparator(firstInputFileName);
+			final String inputName = FilenameUtils.getBaseName(firstInputFileName);
 
-		File deobfMapFile = new File(inputPath, inputName + ".jobf");
-		deobfuscator = new Deobfuscator(args, root.getDexNodes(), deobfMapFile);
+			File deobfMapFile = new File(inputPath, inputName + ".jobf");
+			deobfuscator = new Deobfuscator(args, root.getDexNodes(), deobfMapFile);
+		}
 		boolean deobfuscationOn = args.isDeobfuscationOn();
 		if (deobfuscationOn) {
 			deobfuscator.execute();
@@ -58,7 +60,7 @@ public class RenameVisitor extends AbstractVisitor {
 	}
 
 	private void checkClasses(RootNode root) {
-		Set<String> clsNames = new HashSet<String>();
+		Set<String> clsNames = new HashSet<>();
 		for (ClassNode cls : root.getClasses(true)) {
 			checkClassName(cls);
 			if (!CASE_SENSITIVE_FS) {
@@ -95,7 +97,7 @@ public class RenameVisitor extends AbstractVisitor {
 	}
 
 	private void checkFields(ClassNode cls) {
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		for (FieldNode field : cls.getFields()) {
 			FieldInfo fieldInfo = field.getFieldInfo();
 			if (!names.add(fieldInfo.getAlias())) {
@@ -105,7 +107,7 @@ public class RenameVisitor extends AbstractVisitor {
 	}
 
 	private void checkMethods(ClassNode cls) {
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		for (MethodNode mth : cls.getMethods()) {
 			if (mth.contains(AFlag.DONT_GENERATE)) {
 				continue;
@@ -127,5 +129,9 @@ public class RenameVisitor extends AbstractVisitor {
 		}
 		signature.append(')');
 		return signature.toString();
+	}
+
+	public Deobfuscator getDeobfuscator() {
+		return deobfuscator;
 	}
 }

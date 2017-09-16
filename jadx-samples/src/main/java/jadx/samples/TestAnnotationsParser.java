@@ -9,7 +9,7 @@ public class TestAnnotationsParser extends AbstractTest {
 
 	@Target({ElementType.TYPE})
 	@Retention(RetentionPolicy.RUNTIME)
-	public static @interface A {
+	public @interface A {
 		int i();
 
 		float f();

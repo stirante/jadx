@@ -6,8 +6,8 @@ import java.util.List;
 
 public class SimpleIndex<T> extends SearchIndex<T> {
 
-	private final List<String> keys = new ArrayList<String>();
-	private final List<T> values = new ArrayList<T>();
+	private final List<String> keys = new ArrayList<>();
+	private final List<T> values = new ArrayList<>();
 
 	@Override
 	public void put(String str, T value) {
@@ -21,7 +21,7 @@ public class SimpleIndex<T> extends SearchIndex<T> {
 		if (size == 0) {
 			return Collections.emptyList();
 		}
-		List<T> results = new ArrayList<T>();
+		List<T> results = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			String key = keys.get(i);
 			if (key.contains(str)) {

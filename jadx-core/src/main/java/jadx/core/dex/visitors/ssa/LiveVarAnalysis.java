@@ -87,22 +87,21 @@ public class LiveVarAnalysis {
 		int k = 0;
 		do {
 			changed = false;
-			for (int i = 0; i < blocksSize; i++) {
-				BlockNode block = blocks.get(i);
-				int blockId = block.getId();
-				BitSet prevIn = liveIn[blockId];
-				BitSet newIn = new BitSet(regsCount);
-				List<BlockNode> successors = block.getSuccessors();
-				for (int s = 0, successorsSize = successors.size(); s < successorsSize; s++) {
-					newIn.or(liveIn[successors.get(s).getId()]);
-				}
-				newIn.andNot(defs[blockId]);
-				newIn.or(uses[blockId]);
-				if (!prevIn.equals(newIn)) {
-					changed = true;
-					liveIn[blockId] = newIn;
-				}
-			}
+            for (BlockNode block : blocks) {
+                int blockId = block.getId();
+                BitSet prevIn = liveIn[blockId];
+                BitSet newIn = new BitSet(regsCount);
+                List<BlockNode> successors = block.getSuccessors();
+                for (BlockNode successor : successors) {
+                    newIn.or(liveIn[successor.getId()]);
+                }
+                newIn.andNot(defs[blockId]);
+                newIn.or(uses[blockId]);
+                if (!prevIn.equals(newIn)) {
+                    changed = true;
+                    liveIn[blockId] = newIn;
+                }
+            }
 			if (k++ > 1000) {
 				throw new JadxRuntimeException("Live variable analysis reach iterations limit");
 			}

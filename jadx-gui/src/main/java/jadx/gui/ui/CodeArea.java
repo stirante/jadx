@@ -13,7 +13,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -256,19 +255,19 @@ class CodeArea extends RSyntaxTextArea {
     }
 
     private static String generateParams(JavaMethod meth) {
-        String params = "";
+        StringBuilder params = new StringBuilder();
         for (ArgType arg : meth.getArguments()) {
-            if (!params.isEmpty()) params += ", ";
+            if (params.length() > 0) params.append(", ");
             if (arg.isPrimitive())
-                params += arg.getPrimitiveType().getLongName() + ".class";
+                params.append(arg.getPrimitiveType().getLongName()).append(".class");
             else if (arg.getObject().equalsIgnoreCase(ArgType.STRING.getObject()))
-                params += "String.class";
+                params.append("String.class");
             else if (arg.getObject().equalsIgnoreCase(ArgType.OBJECT.getObject()))
-                params += "Object.class";
+                params.append("Object.class");
             else
-                params += FIND_CLASS.replace("%className", arg.getObject());
+                params.append(FIND_CLASS.replace("%className", arg.getObject()));
         }
-        return params;
+        return params.toString();
     }
 
     private class GenerateHookAction extends AbstractAction implements PopupMenuListener {

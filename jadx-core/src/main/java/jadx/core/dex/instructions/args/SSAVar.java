@@ -20,7 +20,7 @@ public class SSAVar extends AttrNode {
 
 	@NotNull
 	private RegisterArg assign;
-	private final List<RegisterArg> useList = new ArrayList<RegisterArg>(2);
+	private final List<RegisterArg> useList = new ArrayList<>(2);
 	@Nullable
 	private PhiInsn usedInPhi;
 
@@ -149,9 +149,9 @@ public class SSAVar extends AttrNode {
 			this.type = acceptedType;
 		}
 		assign.type = acceptedType;
-		for (int i = 0, useListSize = useList.size(); i < useListSize; i++) {
-			useList.get(i).type = acceptedType;
-		}
+        for (RegisterArg anUseList : useList) {
+            anUseList.type = acceptedType;
+        }
 	}
 
 	public void setTypeImmutable(ArgType type) {

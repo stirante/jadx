@@ -89,7 +89,7 @@ public class TextSearchIndex {
                 return items;
             }
         } else {
-            items = new ArrayList<CodeNode>();
+            items = new ArrayList<>();
         }
         addSkippedClasses(items, text);
         return items;

@@ -52,7 +52,7 @@ public class JSources extends JNode {
 	 * @return root packages
 	 */
 	List<JPackage> getHierarchyPackages(List<JavaPackage> packages) {
-		Map<String, JPackage> pkgMap = new HashMap<String, JPackage>();
+		Map<String, JPackage> pkgMap = new HashMap<>();
 		for (JavaPackage pkg : packages) {
 			addPackage(pkgMap, new JPackage(pkg));
 		}
@@ -90,7 +90,7 @@ public class JSources extends JNode {
 			innerPackages.addAll(pkg.getInnerPackages());
 		}
 		// find root packages
-		List<JPackage> rootPkgs = new ArrayList<JPackage>();
+		List<JPackage> rootPkgs = new ArrayList<>();
 		for (JPackage pkg : pkgMap.values()) {
 			if (!innerPackages.contains(pkg)) {
 				rootPkgs.add(pkg);

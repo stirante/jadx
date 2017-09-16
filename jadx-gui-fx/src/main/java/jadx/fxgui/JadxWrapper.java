@@ -38,26 +38,23 @@ public class JadxWrapper {
 	}
 
 	public void saveAll(final File dir, final ProgressMonitor progressMonitor) {
-		Runnable save = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					decompiler.setOutputDir(dir);
-					ThreadPoolExecutor ex = (ThreadPoolExecutor) decompiler.getSaveExecutor();
-					ex.shutdown();
-					while (ex.isTerminating()) {
-						long total = ex.getTaskCount();
-						long done = ex.getCompletedTaskCount();
-						progressMonitor.setProgress((int) (done * 100.0 / (double) total));
-						Thread.sleep(500);
-					}
-					progressMonitor.close();
-					LOG.info("done");
-				} catch (InterruptedException e) {
-					LOG.error("Save interrupted", e);
-				}
-			}
-		};
+		Runnable save = () -> {
+            try {
+                decompiler.setOutputDir(dir);
+                ThreadPoolExecutor ex = (ThreadPoolExecutor) decompiler.getSaveExecutor();
+                ex.shutdown();
+                while (ex.isTerminating()) {
+                    long total = ex.getTaskCount();
+                    long done = ex.getCompletedTaskCount();
+                    progressMonitor.setProgress((int) (done * 100.0 / (double) total));
+                    Thread.sleep(500);
+                }
+                progressMonitor.close();
+                LOG.info("done");
+            } catch (InterruptedException e) {
+                LOG.error("Save interrupted", e);
+            }
+        };
 		new Thread(save).start();
 	}
 
@@ -75,5 +72,9 @@ public class JadxWrapper {
 
 	public File getOpenFile() {
 		return openFile;
+	}
+
+	public JadxDecompiler getDecompiler() {
+		return decompiler;
 	}
 }

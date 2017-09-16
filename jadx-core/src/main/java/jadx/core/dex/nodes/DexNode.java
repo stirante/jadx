@@ -36,8 +36,8 @@ public class DexNode implements IDexNode {
 	private final Dex dexBuf;
 	private final DexFile file;
 
-	private final List<ClassNode> classes = new ArrayList<ClassNode>();
-	private final Map<ClassInfo, ClassNode> clsMap = new HashMap<ClassInfo, ClassNode>();
+	private final List<ClassNode> classes = new ArrayList<>();
+	private final Map<ClassInfo, ClassNode> clsMap = new HashMap<>();
 
 	private final InfoStorage infoStorage = new InfoStorage();
 
@@ -57,7 +57,7 @@ public class DexNode implements IDexNode {
 
 	void initInnerClasses() {
 		// move inner classes
-		List<ClassNode> inner = new ArrayList<ClassNode>();
+		List<ClassNode> inner = new ArrayList<>();
 		for (ClassNode cls : classes) {
 			if (cls.getClassInfo().isInner()) {
 				inner.add(cls);
@@ -189,7 +189,7 @@ public class DexNode implements IDexNode {
 
 	public List<ArgType> readParamList(int parametersOffset) {
 		TypeList paramList = dexBuf.readTypeList(parametersOffset);
-		List<ArgType> args = new ArrayList<ArgType>(paramList.getTypes().length);
+		List<ArgType> args = new ArrayList<>(paramList.getTypes().length);
 		for (short t : paramList.getTypes()) {
 			args.add(getType(t));
 		}

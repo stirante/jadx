@@ -14,20 +14,20 @@ public class JadxSettings extends JadxCLIArgs {
 
 	private static final Font DEFAULT_FONT = new RSyntaxTextArea().getFont();
 
-	static final Set<String> SKIP_FIELDS = new HashSet<String>(Arrays.asList(
-			"files", "input", "outputDir", "verbose", "printHelp"
-	));
+	static final Set<String> SKIP_FIELDS = new HashSet<>(Arrays.asList(
+            "files", "input", "outputDir", "verbose", "printHelp"
+    ));
 
 	private String lastOpenFilePath = USER_HOME;
 	private String lastSaveFilePath = USER_HOME;
 	private boolean flattenPackage = false;
 	private boolean checkForUpdates = true;
 	private boolean moreResults = false;
-	private List<String> recentFiles = new ArrayList<String>();
+	private List<String> recentFiles = new ArrayList<>();
 	private String fontStr = "";
 	private boolean autoStartJobs = true;
 
-	private Map<String, WindowLocation> windowPos = new HashMap<String, WindowLocation>();
+	private Map<String, WindowLocation> windowPos = new HashMap<>();
 
 	public JadxSettings() {
 		setSkipResources(true);

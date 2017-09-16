@@ -209,7 +209,7 @@ public class CodeWriter {
 
 	private Object attachAnnotation(Object obj, CodePosition pos) {
 		if (annotations.isEmpty()) {
-			annotations = new HashMap<CodePosition, Object>();
+			annotations = new HashMap<>();
 		}
 		return annotations.put(pos, obj);
 	}
@@ -227,7 +227,7 @@ public class CodeWriter {
 
 	private void attachSourceLine(int decompiledLine, int sourceLine) {
 		if (lineMap.isEmpty()) {
-			lineMap = new TreeMap<Integer, Integer>();
+			lineMap = new TreeMap<>();
 		}
 		lineMap.put(decompiledLine, sourceLine);
 	}

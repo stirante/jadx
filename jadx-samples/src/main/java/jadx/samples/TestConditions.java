@@ -31,14 +31,11 @@ public class TestConditions extends AbstractTest {
 	}
 
 	public boolean test2(int num) {
-		if (num == 4 || num == 6) {
-			return String.valueOf(num).equals("4");
-		}
-		if (num == 5) {
-			return true;
-		}
-		return this.toString().equals("a");
-	}
+        if (num == 4 || num == 6) {
+            return String.valueOf(num).equals("4");
+        }
+        return num == 5 || this.toString().equals("a");
+    }
 
 	public void test3(boolean a, boolean b) {
 		if (a || b) {

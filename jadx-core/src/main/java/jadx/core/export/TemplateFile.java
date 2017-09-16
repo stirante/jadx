@@ -34,7 +34,7 @@ public class TemplateFile {
 
 	private final String templateName;
 	private final InputStream template;
-	private final Map<String, String> values = new HashMap<String, String>();
+	private final Map<String, String> values = new HashMap<>();
 
 	public static TemplateFile fromResources(String path) throws FileNotFoundException {
 		InputStream res = TemplateFile.class.getResourceAsStream(path);

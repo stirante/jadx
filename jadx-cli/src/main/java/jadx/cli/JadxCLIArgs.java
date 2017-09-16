@@ -83,7 +83,7 @@ public class JadxCLIArgs implements IJadxArgs {
 	@Parameter(names = {"-h", "--help"}, description = "print this help", help = true)
 	protected boolean printHelp = false;
 
-	private final List<File> input = new ArrayList<File>(1);
+	private final List<File> input = new ArrayList<>(1);
 	private File outputDir;
 
 	public boolean processArgs(String[] args) {
@@ -154,7 +154,7 @@ public class JadxCLIArgs implements IJadxArgs {
 		out.println("options:");
 
 		List<ParameterDescription> params = jc.getParameters();
-		Map<String, ParameterDescription> paramsMap = new LinkedHashMap<String, ParameterDescription>(params.size());
+		Map<String, ParameterDescription> paramsMap = new LinkedHashMap<>(params.size());
 		int maxNamesLen = 0;
 		for (ParameterDescription p : params) {
 			paramsMap.put(p.getParameterized().getName(), p);

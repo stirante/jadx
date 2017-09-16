@@ -41,21 +41,18 @@ public class ProcessTryCatchRegions extends AbstractRegionVisitor {
 			return;
 		}
 
-		final Map<BlockNode, TryCatchBlock> tryBlocksMap = new HashMap<BlockNode, TryCatchBlock>(2);
+		final Map<BlockNode, TryCatchBlock> tryBlocksMap = new HashMap<>(2);
 		searchTryCatchDominators(mth, tryBlocksMap);
 
-		IRegionIterativeVisitor visitor = new IRegionIterativeVisitor() {
-			@Override
-			public boolean visitRegion(MethodNode mth, IRegion region) {
-				boolean changed = checkAndWrap(mth, tryBlocksMap, region);
-				return changed && !tryBlocksMap.isEmpty();
-			}
-		};
+		IRegionIterativeVisitor visitor = (mth1, region) -> {
+            boolean changed = checkAndWrap(mth1, tryBlocksMap, region);
+            return changed && !tryBlocksMap.isEmpty();
+        };
 		DepthRegionTraversal.traverseIncludingExcHandlers(mth, visitor);
 	}
 
 	private static void searchTryCatchDominators(MethodNode mth, Map<BlockNode, TryCatchBlock> tryBlocksMap) {
-		Set<TryCatchBlock> tryBlocks = new HashSet<TryCatchBlock>();
+		Set<TryCatchBlock> tryBlocks = new HashSet<>();
 		// collect all try/catch blocks
 		for (BlockNode block : mth.getBasicBlocks()) {
 			CatchAttr c = block.get(AType.CATCH_BLOCK);

@@ -41,12 +41,7 @@ import com.android.dx.rop.code.AccessFlags;
 public class ClassGen {
 	private static final Logger LOG = LoggerFactory.getLogger(ClassGen.class);
 
-	public static final Comparator<MethodNode> METHOD_LINE_COMPARATOR = new Comparator<MethodNode>() {
-		@Override
-		public int compare(MethodNode a, MethodNode b) {
-			return Utils.compare(a.getSourceLine(), b.getSourceLine());
-		}
-	};
+	public static final Comparator<MethodNode> METHOD_LINE_COMPARATOR = (a, b) -> Utils.compare(a.getSourceLine(), b.getSourceLine());
 
 	private final ClassNode cls;
 	private final ClassGen parentGen;
@@ -54,7 +49,7 @@ public class ClassGen {
 	private final boolean fallback;
 	private final boolean showInconsistentCode;
 
-	private final Set<ClassInfo> imports = new HashSet<ClassInfo>();
+	private final Set<ClassInfo> imports = new HashSet<>();
 	private int clsDeclLine;
 
 	public ClassGen(ClassNode cls, IJadxArgs jadxArgs) {
@@ -89,7 +84,7 @@ public class ClassGen {
 		}
 		int importsCount = imports.size();
 		if (importsCount != 0) {
-			List<String> sortImports = new ArrayList<String>(importsCount);
+			List<String> sortImports = new ArrayList<>(importsCount);
 			for (ClassInfo ic : imports) {
 				sortImports.add(ic.getAlias().getFullName());
 			}
@@ -273,8 +268,8 @@ public class ClassGen {
 	}
 
 	private static List<MethodNode> sortMethodsByLine(List<MethodNode> methods) {
-		List<MethodNode> out = new ArrayList<MethodNode>(methods);
-		Collections.sort(out, METHOD_LINE_COMPARATOR);
+		List<MethodNode> out = new ArrayList<>(methods);
+		out.sort(METHOD_LINE_COMPARATOR);
 		return out;
 	}
 
