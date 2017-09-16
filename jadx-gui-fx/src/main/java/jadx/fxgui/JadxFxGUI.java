@@ -452,7 +452,7 @@ public class JadxFxGUI extends Application {
                     }
                 }
                 //TODO: Disabled for testing
-//                runBackgroundJobs();
+                runBackgroundJobs();
             }
         }.execute();
         stage.setTitle(DEFAULT_TITLE + " - " + f.getName());
@@ -579,6 +579,10 @@ public class JadxFxGUI extends Application {
 
     public ManifestInfo getManifestInfo() {
         return manifestInfo;
+    }
+
+    public CacheObject getCacheObject() {
+        return cacheObject;
     }
 
     public class DummyJavaNode extends JNode {

@@ -6,14 +6,15 @@ import jadx.api.JavaMethod;
 import jadx.api.JavaNode;
 import jadx.core.dex.nodes.ProcessState;
 import jadx.fxgui.JadxFxGUI;
+import jadx.fxgui.treemodel.CodeNode;
 import jadx.fxgui.treemodel.JClass;
+import jadx.fxgui.treemodel.JMethod;
 import jadx.fxgui.treemodel.JNode;
 import jadx.fxgui.ui.syntax.BaseSyntax;
 import jadx.fxgui.utils.AsyncTask;
 import jadx.fxgui.utils.NLS;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
@@ -27,6 +28,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,13 +66,13 @@ public class CodeView extends Tab {
         });
         usageItem = new MenuItem(NLS.str("popup.find_usage"));
         usageItem.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Not yet implemented!");
-            alert.setHeaderText(null);
-            alert.setContentText("This feature is not yet implemented");
-
-            alert.showAndWait();
             System.out.println(currentNode);
+            JNode jNode = app.getCacheObject().getNodeCache().makeFrom(currentNode);
+            List<CodeNode> usageList = app.getCacheObject().getUsageInfo().getUsageList(jNode);
+            for (CodeNode codeNode : usageList) {
+                System.out.println(codeNode);
+            }
+            Dialogs.showInfo("Not yet implemented", "This feature is not yet implemented");
         });
         renameItem = new MenuItem("Rename");
         renameItem.setOnAction(e -> {
@@ -93,6 +95,7 @@ public class CodeView extends Tab {
                     app.refreshTabs();
                 }
             } else if (currentNode instanceof JavaMethod && ((JavaMethod) currentNode).isConstructor()) {
+                //theoretically impossible for the code to reach here
                 Dialogs.showWarning("Rename", "You can't rename constructor!");
             }
         });
@@ -128,6 +131,7 @@ public class CodeView extends Tab {
                 JClass clz = (JClass) node;
                 currentNode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
                 usageItem.setDisable(currentNode == null);
+                renameItem.setDisable((currentNode == null) || ((currentNode instanceof JMethod) && ((JavaMethod) ((JMethod) currentNode).getJavaNode()).isConstructor()));
             }
         });
         codeArea.setOnMouseClicked(event -> {

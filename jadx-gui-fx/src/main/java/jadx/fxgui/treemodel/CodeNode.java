@@ -2,66 +2,49 @@ package jadx.fxgui.treemodel;
 
 import jadx.api.JavaNode;
 import jadx.fxgui.utils.search.StringRef;
-import javafx.scene.Node;
 
 
-public class CodeNode extends JNode {
+public class CodeNode {
 
-	private static final long serialVersionUID = 1658650786734966545L;
+    private final JNode jNode;
+    private final StringRef line;
+    private final int lineNum;
 
-	private final JNode jNode;
-	private final JClass jParent;
-	private final StringRef line;
-	private final int lineNum;
+    public CodeNode(JNode jNode, int lineNum, StringRef line) {
+        this.jNode = jNode;
+        this.line = line;
+        this.lineNum = lineNum;
+    }
 
-	public CodeNode(JNode jNode, int lineNum, StringRef line) {
-		this.jNode = jNode;
-		this.jParent = this.jNode.getJParent();
-		this.line = line;
-		this.lineNum = lineNum;
-		init();
-	}
+    public JavaNode getJavaNode() {
+        return jNode.getJavaNode();
+    }
 
-	public Node getIcon() {
-		return jNode.getIcon();
-	}
+    public JClass getRootClass() {
+        JClass parent = jNode.getJParent();
+        if (parent == null && jNode instanceof JClass) return (JClass) jNode;
+        else if (parent == null) return null;
+        while (parent.getJParent() != null) {
+            parent = parent.getJParent();
+        }
+        return parent;
+    }
 
-	public JavaNode getJavaNode() {
-		return jNode.getJavaNode();
-	}
+    public JClass getContainingClass() {
+        if (jNode instanceof JClass) return (JClass) jNode;
+        else return jNode.getJParent();
+    }
 
-	public JClass getJParent() {
-		return getRootClass();
-	}
+    public int getLine() {
+        return lineNum;
+    }
 
-	public JClass getRootClass() {
-		JClass parent = jParent;
-		if (parent != null) {
-			return parent.getRootClass();
-		}
-		if (jNode instanceof JClass) {
-			return (JClass) jNode;
-		}
-		return null;
-	}
+    public String getLineString() {
+        return getRootClass().getContent().split("\n")[getLine() - 1].trim();
+    }
 
-	public int getLine() {
-		return lineNum;
-	}
-
-	public String makeDescString() {
-		return line.toString();
-	}
-
-	public boolean hasDescString() {
-		return true;
-	}
-
-	public String makeString() {
-		return jNode.makeLongString();
-	}
-
-	public String makeLongString() {
-		return makeString();
-	}
+    @Override
+    public String toString() {
+        return getLineString();
+    }
 }
