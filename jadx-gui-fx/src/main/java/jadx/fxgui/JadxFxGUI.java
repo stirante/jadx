@@ -2,6 +2,8 @@ package jadx.fxgui;
 
 import jadx.api.JadxDecompiler;
 import jadx.api.JavaNode;
+import jadx.api.ResourceFile;
+import jadx.api.ResourceType;
 import jadx.fxgui.jobs.BackgroundWorker;
 import jadx.fxgui.jobs.DecompileJob;
 import jadx.fxgui.jobs.IndexJob;
@@ -10,10 +12,7 @@ import jadx.fxgui.settings.JadxSettingsAdapter;
 import jadx.fxgui.treemodel.*;
 import jadx.fxgui.ui.CodeView;
 import jadx.fxgui.ui.DrawableView;
-import jadx.fxgui.utils.AsyncTask;
-import jadx.fxgui.utils.CacheObject;
-import jadx.fxgui.utils.LogCollector;
-import jadx.fxgui.utils.NLS;
+import jadx.fxgui.utils.*;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -366,6 +365,7 @@ public class JadxFxGUI extends Application {
     private CacheObject cacheObject;
     private Stage stage;
     private BackgroundWorker backgroundWorker;
+    private ManifestInfo manifestInfo;
 
     public static void main(String[] args) {
         launch(args);
@@ -439,6 +439,18 @@ public class JadxFxGUI extends Application {
             @Override
             public void onPostExecute(JRoot result) {
                 fileTree.setRoot(result);
+                result.setExpanded(true);
+                for (ResourceFile resourceFile : getDecompiler().getResources()) {
+                    if (resourceFile.getType() == ResourceType.MANIFEST) {
+                        manifestInfo = new ManifestInfo(resourceFile.loadContent().getContent().getCodeStr());
+                        stage.setTitle(DEFAULT_TITLE + " - " + manifestInfo.getPackageName() + " " + manifestInfo.getVersionName() + " (" + manifestInfo.getVersionCode() + ")");
+                        for (ManifestInfo.Activity activity : manifestInfo.getActivities()) {
+                            if (activity.isMain()) {
+                                open(activity.getName());
+                            }
+                        }
+                    }
+                }
                 //TODO: Disabled for testing
 //                runBackgroundJobs();
             }
@@ -477,6 +489,38 @@ public class JadxFxGUI extends Application {
         int threadsCount = 1;
         cacheObject.setDecompileJob(new DecompileJob(wrapper, threadsCount));
         cacheObject.setIndexJob(new IndexJob(wrapper, cacheObject, threadsCount));
+    }
+
+    public void open(String clz) {
+        if (fileTree.getRoot() instanceof JRoot) {
+            JRoot root = (JRoot) fileTree.getRoot();
+            for (TreeItem<String> item : root.getChildren()) {
+                if (item instanceof JSources) {
+                    JSources src = (JSources) item;
+                    for (TreeItem<String> pack : src.getChildren()) {
+                        if (pack instanceof JPackage) {
+                            JClass c = findClass((JPackage) pack, clz);
+                            if (c != null) {
+                                openTab(c);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private JClass findClass(JPackage pack, String clz) {
+        for (TreeItem<String> item : pack.getChildren()) {
+            if (item instanceof JClass && ((JClass) item).getFullName().equals(clz)) {
+                return (JClass) item;
+            } else if (item instanceof JPackage) {
+                JClass aClass = findClass((JPackage) item, clz);
+                if (aClass != null) return aClass;
+            }
+        }
+        return null;
     }
 
     public void openTab(Object node) {
@@ -531,6 +575,10 @@ public class JadxFxGUI extends Application {
         }
         TreeItem<String> root = fileTree.getRoot();
         if (root instanceof JNode) ((JNode) root).invalidateValues();
+    }
+
+    public ManifestInfo getManifestInfo() {
+        return manifestInfo;
     }
 
     public class DummyJavaNode extends JNode {

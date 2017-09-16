@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class DeobfPresets {
     private static final Logger LOG = LoggerFactory.getLogger(DeobfPresets.class);
@@ -32,14 +30,17 @@ class DeobfPresets {
 
     public void rename(ClassInfo cls, String name) {
         clsPresetMap.put(cls.getFullName(), name);
+        save();
     }
 
     public void rename(FieldInfo fld, String name) {
         fldPresetMap.put(fld.getFullId(), name);
+        save();
     }
 
     public void rename(MethodInfo meth, String name) {
         mthPresetMap.put(meth.getFullId(), name);
+        save();
     }
 
     /**
@@ -99,7 +100,25 @@ class DeobfPresets {
                 dumpMapping();
             }
         } catch (IOException e) {
-            LOG.error("Failed to load deobfuscation map file '{}'", deobfMapFile.getAbsolutePath(), e);
+            LOG.error("Failed to save deobfuscation map file '{}'", deobfMapFile.getAbsolutePath(), e);
+        }
+    }
+
+    public void save() {
+        try {
+            StringBuilder sb = new StringBuilder("");
+            for (String s : clsPresetMap.keySet()) {
+                sb.append("c ").append(s).append(" = ").append(clsPresetMap.get(s)).append("\n");
+            }
+            for (String s : mthPresetMap.keySet()) {
+                sb.append("m ").append(s).append(" = ").append(mthPresetMap.get(s)).append("\n");
+            }
+            for (String s : fldPresetMap.keySet()) {
+                sb.append("f ").append(s).append(" = ").append(fldPresetMap.get(s)).append("\n");
+            }
+            FileUtils.write(deobfMapFile, sb.toString());
+        } catch (IOException e) {
+            LOG.error("Failed to save deobfuscation map file '{}'", deobfMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -157,9 +176,9 @@ class DeobfPresets {
     }
 
     public void clear() {
-        clsPresetMap.clear();
-        fldPresetMap.clear();
-        mthPresetMap.clear();
+//        clsPresetMap.clear();
+//        fldPresetMap.clear();
+//        mthPresetMap.clear();
     }
 
     public Map<String, String> getClsPresetMap() {

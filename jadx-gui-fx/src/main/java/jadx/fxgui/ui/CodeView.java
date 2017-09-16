@@ -127,7 +127,6 @@ public class CodeView extends Tab {
                 CharacterHit hit = codeArea.hit(event.getX(), event.getY());
                 JClass clz = (JClass) node;
                 currentNode = getJavaNodeAtOffset(clz, hit.getInsertionIndex());
-                System.out.println(currentNode.toString());
                 usageItem.setDisable(currentNode == null);
             }
         });

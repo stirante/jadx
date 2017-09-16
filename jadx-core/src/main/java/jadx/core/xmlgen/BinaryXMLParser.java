@@ -200,7 +200,9 @@ public class BinaryXMLParser extends CommonBinaryParser {
 
 		writer.startLine().addIndent();
 		writer.attachSourceLine(lineNumber);
-		writer.add(StringUtils.escapeXML(str.trim())); // TODO: wrap into CDATA for easier reading
+		String str1 = StringUtils.escapeXML(str.trim());
+		if (str1.equalsIgnoreCase("true")) str1 = "true=\"true\"";
+		writer.add(str1); // TODO: wrap into CDATA for easier reading
 
 		int size = is.readInt16();
 		is.skip(size - 2);

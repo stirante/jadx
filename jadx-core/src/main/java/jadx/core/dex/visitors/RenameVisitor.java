@@ -33,7 +33,6 @@ public class RenameVisitor extends AbstractVisitor {
 	public void init(RootNode root) {
 		IJadxArgs args = root.getArgs();
 		if (deobfuscator == null) {
-
 			InputFile firstInputFile = root.getDexNodes().get(0).getDexFile().getInputFile();
 			final String firstInputFileName = firstInputFile.getFile().getAbsolutePath();
 			final String inputPath = FilenameUtils.getFullPathNoEndSeparator(firstInputFileName);
